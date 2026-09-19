@@ -1,7 +1,6 @@
 package br.ifrn.caronas.controllers;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,6 +39,13 @@ public class CaronasController {
 		return "caronas/form";
 	}
 
+	/**
+	 * Salva uma nova carona
+	 * @param caronaRequestDTO
+	 * @param result
+	 * @param attributes
+	 * @return
+	 */
 	@PostMapping
 	public String salvar(@Valid CaronaRequestDTO caronaRequestDTO, BindingResult result,
 			RedirectAttributes attributes) {
@@ -61,20 +67,28 @@ public class CaronasController {
 		return "redirect:/caronas/novo";
 	}
 	
+	/**
+	 * Reserva a carona para o usuário logado
+	 * @param id
+	 * @param attributes
+	 * @return
+	 */
 	@PostMapping("/{id}/reservar")
 	public ModelAndView reservar(@PathVariable Long id, RedirectAttributes attributes) {
 		Optional<Carona> optional = cr.findById(id);
 		ModelAndView md = new ModelAndView();
 		md.setViewName("redirect:/caronas");
+		
+		/** Verifica se a carona existe **/
 		if (optional.isEmpty()) {
 			attributes.addFlashAttribute("msg", "Carona não encontrada");
-			
 			return md;
 		}
 		
 		Carona carona = optional.get();
 		Usuario usuario = getPrincipal();
 		
+		/** Verifica se o usuário já está na carona como motorista ou passageiro **/
 		if (carona.getMotorista().getId() == usuario.getId()) {
 			attributes.addFlashAttribute("msg", "Usuario já está na carona");
 			return md;
@@ -87,11 +101,13 @@ public class CaronasController {
 			}
 		}
 		
+		/** Verifica se a carona está lotada **/
 		if(carona.getVagas() <= carona.getPassageiros().size()) {
 			attributes.addFlashAttribute("msg", "Carona lotada, não é possível fazer reserva");
 			return md;
 		}
 		
+		/** Adiciona o usuário na carona **/
 		carona.getPassageiros().add(usuario);
 		cr.save(carona);
 		
@@ -129,6 +145,32 @@ public class CaronasController {
 		attributes.addFlashAttribute("msg", "O usuário não está na carona para ser removido");
 		return md;
 	}
+	
+	@PostMapping("/{id}/cancelar")
+	public ModelAndView cancelarCarona(@PathVariable Long id, RedirectAttributes attributes) {
+		Optional<Carona> optional = cr.findById(id);
+		ModelAndView md = new ModelAndView();
+		
+		if (optional.isEmpty()) {
+			md.setViewName("redirect:/caronas");
+			attributes.addFlashAttribute("msg", "Carona não encontrada");
+			return md;
+		}
+		Carona carona = optional.get();
+		Usuario usuario = getPrincipal();
+		
+		md.setViewName("redirect:/caronas/{id}");
+		if(carona.getMotorista().getId() != usuario.getId()) {
+			attributes.addFlashAttribute("msg", "Você não tem permissão para cancelar essa carona");
+			return md;
+		}
+		
+		carona.setCancelada(true);
+		cr.save(carona);
+		attributes.addFlashAttribute("msg", "Carona cancelada!");
+		
+		return md;
+	}
 
 	@GetMapping("/{id}")
 	public ModelAndView detalhes(@PathVariable Long id, RedirectAttributes attributes) {
@@ -140,7 +182,7 @@ public class CaronasController {
 			return md;
 		}
 		md.setViewName("caronas/detalhes");
-		md.addObject("carona", optional.get());
+		md.addObject("carona", CaronaItemListaDTO.gerarCaronaItemListaDTO(optional.get(), getPrincipal()));
 		return md;
 	}
 
@@ -149,10 +191,10 @@ public class CaronasController {
 		
 		LocalDateTime umaHoraAtras = LocalDateTime.now().minusHours(1);
 
-		List<Carona> all = cr.findByDataAfterOrderByDataAsc(umaHoraAtras);
+		List<Carona> all = cr.findByDataAfterAndCanceladaFalseOrderByDataAsc(umaHoraAtras);
 		Usuario usuario = getPrincipal();
 
-		List<CaronaItemListaDTO> caronas = gerarCaronaItemListaDTO(all, usuario);
+		List<CaronaItemListaDTO> caronas = CaronaItemListaDTO.gerarCaronaItemListaDTO(all, usuario);
 
 		ModelAndView md = new ModelAndView("caronas/lista");
 		md.addObject("caronas", caronas);
@@ -162,61 +204,17 @@ public class CaronasController {
 	@GetMapping("/minhas")
 	public ModelAndView listaMinhas() {
 		
-		LocalDateTime umaHoraAtras = LocalDateTime.now().minusHours(1);
-
 		Usuario usuario = getPrincipal();
 		List<Carona> all = cr.findCaronasEnvolvidasUsuario(usuario);
 
-		List<CaronaItemListaDTO> caronas = gerarCaronaItemListaDTO(all, usuario);
+		List<CaronaItemListaDTO> caronas = CaronaItemListaDTO.gerarCaronaItemListaDTO(all, usuario);
 
 		ModelAndView md = new ModelAndView("caronas/lista-minhas");
 		md.addObject("caronas", caronas);
 		return md;
 	}
 
-	private List<CaronaItemListaDTO> gerarCaronaItemListaDTO(List<Carona> caronas, Usuario usuario) {
-		List<CaronaItemListaDTO> dtos = new ArrayList<CaronaItemListaDTO>();
-
-		for (Carona c : caronas) {
-			dtos.add(gerarCaronaItemListaDTO(c, usuario));
-		}
-
-		return dtos;
-	}
-
-	private CaronaItemListaDTO gerarCaronaItemListaDTO(Carona carona, Usuario usuario) {
-		CaronaItemListaDTO dto = CaronaItemListaDTO.builder()
-									.id(carona.getId())
-									.direcao(carona.getDirecao())
-									.cancelada(carona.isCancelada())
-									.data(carona.getData())
-									.motorista(carona.getMotorista().getNome())
-									.observacoes(carona.getObservacoes())
-									.vagas(carona.getVagas())
-									.valor(carona.getValor())
-									.build();
-
-		if (carona.getMotorista().getId() == usuario.getId()) {
-			dto.setEstouNaCarona(true);
-			dto.setSouMotorista(true);
-		} else {
-			for (Usuario p : carona.getPassageiros()) {
-				if (p.getId() == usuario.getId()) {
-					dto.setEstouNaCarona(true);
-					break;
-				}
-			}
-		}
-
-		dto.setPassageiros(new ArrayList<String>());
-		for (Usuario p : carona.getPassageiros()) {
-			dto.getPassageiros().add(p.getNome());
-		}
-
-		dto.setEsgotada(carona.getVagas() == carona.getPassageiros().size());
-		return dto;
-	}
-
+	// Busca o usuário que está logado
 	private Usuario getPrincipal() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		UserDetails user = (UserDetails) authentication.getPrincipal();

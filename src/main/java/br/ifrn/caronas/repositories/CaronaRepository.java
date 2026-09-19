@@ -16,7 +16,7 @@ public interface CaronaRepository extends JpaRepository<Carona, Long> {
 	
 	List<Carona> findAllByOrderByData();
 	
-	List<Carona> findByDataAfterOrderByDataAsc(LocalDateTime limite);
+	List<Carona> findByDataAfterAndCanceladaFalseOrderByDataAsc(LocalDateTime limite);
 	
 	// Busca caronas onde o usuário é o motorista OU está na lista de passageiros
     @Query("SELECT DISTINCT c FROM Carona c LEFT JOIN c.passageiros p WHERE c.motorista = :usuario OR :usuario MEMBER OF c.passageiros ORDER BY c.data ASC")
