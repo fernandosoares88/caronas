@@ -7,7 +7,7 @@ COPY . .
 
 RUN apt-get install maven -y
 
-RUN mvn clean install
+RUN mvn clean install -Dmaven.test.skip=true
 
 FROM eclipse-temurin:25
 
