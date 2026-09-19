@@ -1,5 +1,5 @@
 
-FROM Ubuntu:latest AS build
+FROM ubuntu:latest AS build
 
 RUN apt-get update
 RUN apt-get install openjdk-25-jdk -y
