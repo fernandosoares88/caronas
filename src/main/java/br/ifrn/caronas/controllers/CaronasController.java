@@ -36,6 +36,17 @@ public class CaronasController {
 
 	@GetMapping("/novo")
 	public String form(CaronaRequestDTO caronaRequestDTO) {
+
+		if(caronaRequestDTO.getId() == null || caronaRequestDTO.getId() == 0) {
+			Optional<Carona> optional = cr.findFirstByMotoristaOrderByIdDesc(getPrincipal());
+			if(optional.isPresent()) {
+				Carona carona = optional.get();
+				caronaRequestDTO.setObservacoes(carona.getObservacoes());
+				caronaRequestDTO.setVagas(carona.getVagas());
+				caronaRequestDTO.setValor(carona.getValor());
+			}
+		}
+		
 		return "caronas/form";
 	}
 

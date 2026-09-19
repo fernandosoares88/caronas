@@ -10,6 +10,7 @@ import lombok.Data;
 @Builder
 public class CaronaRequestDTO {
 	
+	private Long id;
 	private String direcao;
 	private LocalDateTime data;
 	private Integer vagas;
@@ -18,6 +19,7 @@ public class CaronaRequestDTO {
 	
 	public Carona extrair() {
 		return Carona.builder()
+				.id(this.id)
 				.direcao(this.direcao)
 				.data(this.data)
 				.vagas(this.vagas)
