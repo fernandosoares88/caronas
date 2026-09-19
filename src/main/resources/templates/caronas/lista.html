@@ -4,13 +4,14 @@
 <section>
 	<!--     Banner de Apresentação -->
 	<div
-		class="d-block d-md-none p-5 mb-4 bg-primary text-white rounded-3 shadow-sm">
-		<div class="container-fluid">
-			<!-- 	            <h1 class="display-5 fw-bold">Viaje mais, pague menos.</h1> -->
-			<!-- 	            <p class="col-md-8 fs-4">Compartilhe rotas, economize dinheiro e faça novas amizades no seu trajeto diário ou viagens de longo curso.</p> -->
+		class="d-block d-md-none p-4 mb-4 bg-primary text-white rounded-3 shadow-sm text-center">
+		<div class="container-fluid d-grid gap-2 justify-content-center">
 			<a href="/caronas/novo"
-				class="btn btn-light btn-lg fw-bold text-primary mt-2">Oferecer
-				uma Carona</a>
+				class="btn btn-light btn-lg fw-bold text-primary w-100">Oferecer
+				uma Carona</a> 
+			<a href="/caronas/minhas"
+				class="btn btn-light btn-lg fw-bold text-primary w-100">Minhas
+				Viagens</a>
 		</div>
 	</div>
 
@@ -76,8 +77,9 @@
 
 						<div class="d-flex gap-2">
 							<!-- Se estiver cancelada ou esgotada -->
-							<a th:if="${c.cancelada} or (${c.esgotada} and !${c.estouNaCarona})" href="#"
-								class="btn btn-secondary btn-sm disabled fw-bold">Indisponível</a>
+							<a
+								th:if="${c.cancelada} or (${c.esgotada} and !${c.estouNaCarona})"
+								href="#" class="btn btn-secondary btn-sm disabled fw-bold">Indisponível</a>
 
 							<!-- Se o usuário já estiver na carona -->
 							<!-- 							<a -->

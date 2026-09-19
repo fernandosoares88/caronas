@@ -1,50 +1,118 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: html(template=~{::section})}">
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{layout :: html(template=~{::section})}">
 <section>
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow-sm p-4">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h2 class="text-primary mb-0" th:text="${carona.direcao}">Origem ➔ Destino</h2>
-                    <span class="fs-4 fw-bold text-success" th:text="${#numbers.formatCurrency(carona.valor)}">R$ 30,00</span>
-                </div>
-                <hr>
+	<div class="row justify-content-center">
+		<div class="col-md-8">
+			
+			<!-- Alerta de Carona Cancelada (Exibido apenas se carona.cancelada for true) -->
+			<div th:if="${carona.cancelada}" class="alert alert-danger text-center shadow-sm mb-4" role="alert">
+				<h4 class="alert-heading mb-1">⚠️ Esta carona foi cancelada</h4>
+				<p class="mb-0">Não é mais possível realizar reservas ou interagir com esta viagem.</p>
+			</div>
 
-                <div class="row mb-4">
-                    <div class="col-md-6">
-                        <p class="mb-1 text-muted">Data e Horário</p>
-                        <h5 th:text="${#temporals.format(carona.data, 'dd/MM/yyyy HH:mm')}">20/06/2026 07:30</h5>
-                    </div>
-                    <div class="col-md-6">
-                        <p class="mb-1 text-muted">Vagas Disponíveis</p>
-                        <h5 th:text="${carona.vagas - carona.passageiros.size}">2 vagas</h5>
-                    </div>
-                </div>
+			<div class="card shadow-sm p-4" th:classappend="${carona.cancelada} ? 'border-danger' : ''">
+				<div class="d-flex justify-content-between align-items-center mb-3">
+					<h2 class="text-primary mb-0" th:text="${carona.direcao}">Origem
+						➔ Destino</h2>
+					<span class="fs-4 fw-bold text-success"
+						th:text="${#numbers.formatCurrency(carona.valor)}">R$ 30,00</span>
+				</div>
+				<hr>
 
-                <div class="card bg-light border-0 p-3 mb-4">
-                    <h5 class="mb-2"><i class="bi bi-person-circle"></i> <span >Motorista</span></h5>
-                    <p class="mb-1"><strong>Nome:</strong> <span th:text="${carona.motorista.nome}">Carlos Souza</span></p>
-                    <p class="mb-0"><strong>Contato:</strong> <span th:text="${carona.motorista.telefone}">(11) 98888-7777</span></p>
-                </div>
-                
-                <div class="card bg-light border-0 p-3 mb-4">
-                    <h5 class="mb-2"><span>Passageiros confirmados:</span></h5>
-                    <ol>
-                    	<li th:each="p: ${carona.passageiros}"><span th:text="${p.nome}"></span></li>
-                    </ol>
-                </div>
+				<div class="row mb-4">
+					<div class="col-md-6">
+						<p class="mb-1 text-muted">Data e Horário</p>
+						<h5
+							th:text="${#temporals.format(carona.data, 'dd/MM/yyyy HH:mm')}">20/06/2026
+							07:30</h5>
+					</div>
+					<div class="col-md-6">
+						<p class="mb-1 text-muted">Vagas Disponíveis</p>
+						<h5 th:text="${carona.vagas - carona.passageiros.size}">2
+							vagas</h5>
+					</div>
+				</div>
 
-                <div class="mb-4" >
-                    <h5 class="mb-2">Observações do Motorista</h5>
-                    <p class="text-muted" th:text="${carona.observacoes}">Regras da viagem...</p>
-                </div>
+				<div class="card bg-light border-0 p-3 mb-4">
+					<h5 class="mb-2">
+						<i class="bi bi-person-circle"></i> <span>Motorista</span>
+					</h5>
+					<p class="mb-1">
+						<strong>Nome:</strong> <span th:text="${carona.motorista}">Carlos
+							Souza</span>
+					</p>
+					<p class="mb-0">
+						<strong>Contato:</strong> <span
+							th:text="${carona.motoristaTelefone}">(11) 98888-7777</span>
+					</p>
+				</div>
 
-                <!-- Botão de Ação -->
-<!--                 <form  method="post"> -->
-<!--                     <button type="submit" class="btn btn-success w-100 py-2 fw-bold fs-5">Reservar Vaga</button> -->
-<!--                 </form> -->
-            </div>
-        </div>
-    </div>
+				<div class="card bg-light border-0 p-3 mb-4">
+					<h5 class="mb-2">
+						<span>Passageiros confirmados:</span>
+					</h5>
+					<ol>
+						<li th:each="p: ${carona.passageiros}"><span th:text="${p}"></span></li>
+					</ol>
+				</div>
+
+				<div class="mb-4">
+					<h5 class="mb-2">Observações do Motorista</h5>
+					<p class="text-muted" th:text="${carona.observacoes}">Regras da
+						viagem...</p>
+				</div>
+
+				<!-- Botões de Ação (Apenas exibidos se a carona NÃO estiver cancelada) -->
+				<div class="d-flex gap-2 justify-content-end" th:if="!${carona.cancelada}">
+					<!-- Botão Reservar Vaga -->
+					<form
+						th:if="!${carona.estouNaCarona} and !${carona.esgotada}"
+						th:action="@{/caronas/{id}/reservar(id=${carona.id})}"
+						method="post">
+						<button type="submit" class="btn btn-outline-success btn-sm">Reservar
+							Vaga</button>
+					</form>
+
+					<!-- Botão Sair da Carona -->
+					<form
+						th:if="${carona.estouNaCarona} and !${carona.souMotorista}"
+						th:action="@{/caronas/{id}/sair(id=${carona.id})}" method="post">
+						<button type="submit" class="btn btn-outline-danger btn-sm">Sair
+							da Carona</button>
+					</form>
+					
+					<!-- Botão Cancelar Carona (Aciona o Modal) -->
+					<button th:if="${carona.souMotorista}"
+						type="button" class="btn btn-outline-danger btn-sm"
+						data-bs-toggle="modal" data-bs-target="#confirmarCancelamentoModal">
+						Cancelar Carona
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Modal de Confirmação de Cancelamento -->
+	<div class="modal fade" id="confirmarCancelamentoModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title text-danger" id="modalLabel">⚠️ Confirmar Cancelamento</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+				</div>
+				<div class="modal-body">
+					<p>Tem certeza absoluta que deseja cancelar esta carona?</p>
+					<p class="text-danger fw-bold mb-0">Esta operação não é reversível!</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Voltar</button>
+					<form th:action="@{/caronas/{id}/cancelar(id=${carona.id})}" method="post">
+						<button type="submit" class="btn btn-danger btn-sm">Sim, cancelar carona</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
 </section>
 </html>
