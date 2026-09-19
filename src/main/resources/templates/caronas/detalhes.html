@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: html(template=~{::section})}">
+<section>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="text-primary mb-0" th:text="${carona.direcao}">Origem ➔ Destino</h2>
+                    <span class="fs-4 fw-bold text-success" th:text="${#numbers.formatCurrency(carona.valor)}">R$ 30,00</span>
+                </div>
+                <hr>
+
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <p class="mb-1 text-muted">Data e Horário</p>
+                        <h5 th:text="${#temporals.format(carona.data, 'dd/MM/yyyy HH:mm')}">20/06/2026 07:30</h5>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-1 text-muted">Vagas Disponíveis</p>
+                        <h5 th:text="${carona.vagas - carona.passageiros.size}">2 vagas</h5>
+                    </div>
+                </div>
+
+                <div class="card bg-light border-0 p-3 mb-4">
+                    <h5 class="mb-2"><i class="bi bi-person-circle"></i> <span >Motorista</span></h5>
+                    <p class="mb-1"><strong>Nome:</strong> <span th:text="${carona.motorista.nome}">Carlos Souza</span></p>
+                    <p class="mb-0"><strong>Contato:</strong> <span th:text="${carona.motorista.telefone}">(11) 98888-7777</span></p>
+                </div>
+                
+                <div class="card bg-light border-0 p-3 mb-4">
+                    <h5 class="mb-2"><span>Passageiros confirmados:</span></h5>
+                    <ol>
+                    	<li th:each="p: ${carona.passageiros}"><span th:text="${p.nome}"></span></li>
+                    </ol>
+                </div>
+
+                <div class="mb-4" >
+                    <h5 class="mb-2">Observações do Motorista</h5>
+                    <p class="text-muted" th:text="${carona.observacoes}">Regras da viagem...</p>
+                </div>
+
+                <!-- Botão de Ação -->
+<!--                 <form  method="post"> -->
+<!--                     <button type="submit" class="btn btn-success w-100 py-2 fw-bold fs-5">Reservar Vaga</button> -->
+<!--                 </form> -->
+            </div>
+        </div>
+    </div>
+</section>
+</html>
