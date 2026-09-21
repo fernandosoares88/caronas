@@ -201,17 +201,10 @@ public class CaronasController {
 	@GetMapping
 	public ModelAndView lista() {
 		
-		LocalDateTime agora = LocalDateTime.now();
-		LocalDateTime umaHoraAtras = LocalDateTime.now().minusHours(12);
+		LocalDateTime umaHoraAtras = LocalDateTime.now().minusHours(1);
 		
-		ZoneId fusoLocal = ZoneId.of("America/Sao_Paulo");
-	    LocalDateTime agoraLocal = LocalDateTime.now(fusoLocal);
+	    System.out.println("Hora Servidor - 1 hora: " + umaHoraAtras);
 	    
-	    System.out.println("Hora São Paulo: " + agoraLocal);
-	    System.out.println("Hora Servidor: " + agora);
-	    System.out.println("Hora Servidor - 12: " + umaHoraAtras);
-	    
-
 		List<Carona> all = cr.findByDataAfterAndCanceladaFalseOrderByDataAsc(umaHoraAtras);
 		Usuario usuario = getPrincipal();
 

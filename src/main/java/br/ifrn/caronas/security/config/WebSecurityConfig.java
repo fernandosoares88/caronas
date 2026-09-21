@@ -18,13 +18,18 @@ public class WebSecurityConfig {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests((requests) -> requests
-				.requestMatchers("/", "/cadastro").permitAll()
-				.anyRequest().authenticated()).formLogin((form) -> form.loginPage("/login").permitAll())
-				.logout((logout) -> logout.permitAll());
-		return http.build();
+	    http.authorizeHttpRequests((requests) -> requests
+	            .requestMatchers("/", "/cadastro").permitAll()
+	            .anyRequest().authenticated())
+	        .formLogin((form) -> form
+	            .loginPage("/login")
+	            .defaultSuccessUrl("/caronas", true)
+	            .permitAll()
+	        )
+	        .logout((logout) -> logout.permitAll());
+	        
+	    return http.build();
 	}
-
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
