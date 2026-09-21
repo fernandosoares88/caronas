@@ -200,7 +200,7 @@ public class CaronasController {
 	@GetMapping
 	public ModelAndView lista() {
 		
-		LocalDateTime umaHoraAtras = LocalDateTime.now().minusHours(1);
+		LocalDateTime umaHoraAtras = LocalDateTime.now().minusHours(12);
 
 		List<Carona> all = cr.findByDataAfterAndCanceladaFalseOrderByDataAsc(umaHoraAtras);
 		Usuario usuario = getPrincipal();
