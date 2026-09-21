@@ -1,6 +1,7 @@
 package br.ifrn.caronas.controllers;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -200,7 +201,16 @@ public class CaronasController {
 	@GetMapping
 	public ModelAndView lista() {
 		
+		LocalDateTime agora = LocalDateTime.now();
 		LocalDateTime umaHoraAtras = LocalDateTime.now().minusHours(12);
+		
+		ZoneId fusoLocal = ZoneId.of("America/Sao_Paulo");
+	    LocalDateTime agoraLocal = LocalDateTime.now(fusoLocal);
+	    
+	    System.out.println("Hora São Paulo: " + agoraLocal);
+	    System.out.println("Hora Servidor: " + agora);
+	    System.out.println("Hora Servidor - 12: " + umaHoraAtras);
+	    
 
 		List<Carona> all = cr.findByDataAfterAndCanceladaFalseOrderByDataAsc(umaHoraAtras);
 		Usuario usuario = getPrincipal();
