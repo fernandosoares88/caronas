@@ -4,14 +4,17 @@
 <section>
 	<div class="row justify-content-center">
 		<div class="col-md-8">
-			
+
 			<!-- Alerta de Carona Cancelada (Exibido apenas se carona.cancelada for true) -->
-			<div th:if="${carona.cancelada}" class="alert alert-danger text-center shadow-sm mb-4" role="alert">
+			<div th:if="${carona.cancelada}"
+				class="alert alert-danger text-center shadow-sm mb-4" role="alert">
 				<h4 class="alert-heading mb-1">⚠️ Esta carona foi cancelada</h4>
-				<p class="mb-0">Não é mais possível realizar reservas ou interagir com esta viagem.</p>
+				<p class="mb-0">Não é mais possível realizar reservas ou
+					interagir com esta viagem.</p>
 			</div>
 
-			<div class="card shadow-sm p-4" th:classappend="${carona.cancelada} ? 'border-danger' : ''">
+			<div class="card shadow-sm p-4"
+				th:classappend="${carona.cancelada} ? 'border-danger' : ''">
 				<div class="d-flex justify-content-between align-items-center mb-3">
 					<h2 class="text-primary mb-0" th:text="${carona.direcao}">Origem
 						➔ Destino</h2>
@@ -64,10 +67,10 @@
 				</div>
 
 				<!-- Botões de Ação (Apenas exibidos se a carona NÃO estiver cancelada) -->
-				<div class="d-flex gap-2 justify-content-end" th:if="!${carona.cancelada}">
+				<div class="d-flex gap-2 justify-content-end"
+					th:if="!${carona.cancelada}">
 					<!-- Botão Reservar Vaga -->
-					<form
-						th:if="!${carona.estouNaCarona} and !${carona.esgotada}"
+					<form th:if="!${carona.estouNaCarona} and !${carona.esgotada}"
 						th:action="@{/caronas/{id}/reservar(id=${carona.id})}"
 						method="post">
 						<button type="submit" class="btn btn-outline-success btn-sm">Reservar
@@ -75,40 +78,50 @@
 					</form>
 
 					<!-- Botão Sair da Carona -->
-					<form
-						th:if="${carona.estouNaCarona} and !${carona.souMotorista}"
+					<form th:if="${carona.estouNaCarona} and !${carona.souMotorista}"
 						th:action="@{/caronas/{id}/sair(id=${carona.id})}" method="post">
 						<button type="submit" class="btn btn-outline-danger btn-sm">Sair
 							da Carona</button>
 					</form>
-					
+
+					<!-- Botão Editar a Carona -->
+					<a th:if="${carona.souMotorista}"
+						th:href="@{/caronas/{id}/editar(id=${carona.id})}"
+						class="btn btn-outline-primary btn-sm">Editar</a>
+
 					<!-- Botão Cancelar Carona (Aciona o Modal) -->
-					<button th:if="${carona.souMotorista}"
-						type="button" class="btn btn-outline-danger btn-sm"
-						data-bs-toggle="modal" data-bs-target="#confirmarCancelamentoModal">
-						Cancelar Carona
-					</button>
+					<button th:if="${carona.souMotorista}" type="button"
+						class="btn btn-outline-danger btn-sm" data-bs-toggle="modal"
+						data-bs-target="#confirmarCancelamentoModal">Cancelar
+						Carona</button>
 				</div>
 			</div>
 		</div>
 	</div>
 
 	<!-- Modal de Confirmação de Cancelamento -->
-	<div class="modal fade" id="confirmarCancelamentoModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+	<div class="modal fade" id="confirmarCancelamentoModal" tabindex="-1"
+		aria-labelledby="modalLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title text-danger" id="modalLabel">⚠️ Confirmar Cancelamento</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+					<h5 class="modal-title text-danger" id="modalLabel">⚠️
+						Confirmar Cancelamento</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Fechar"></button>
 				</div>
 				<div class="modal-body">
 					<p>Tem certeza absoluta que deseja cancelar esta carona?</p>
-					<p class="text-danger fw-bold mb-0">Esta operação não é reversível!</p>
+					<p class="text-danger fw-bold mb-0">Esta operação não é
+						reversível!</p>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Voltar</button>
-					<form th:action="@{/caronas/{id}/cancelar(id=${carona.id})}" method="post">
-						<button type="submit" class="btn btn-danger btn-sm">Sim, cancelar carona</button>
+					<button type="button" class="btn btn-secondary btn-sm"
+						data-bs-dismiss="modal">Voltar</button>
+					<form th:action="@{/caronas/{id}/cancelar(id=${carona.id})}"
+						method="post">
+						<button type="submit" class="btn btn-danger btn-sm">Sim,
+							cancelar carona</button>
 					</form>
 				</div>
 			</div>

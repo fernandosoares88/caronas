@@ -8,8 +8,7 @@
 		<div class="container-fluid d-grid gap-2 justify-content-center">
 			<a href="/caronas/novo"
 				class="btn btn-light btn-lg fw-bold text-primary w-100">Oferecer
-				uma Carona</a> 
-			<a href="/caronas/minhas"
+				uma Carona</a> <a href="/caronas/minhas"
 				class="btn btn-light btn-lg fw-bold text-primary w-100">Minhas
 				Reservas</a>
 		</div>
@@ -82,11 +81,6 @@
 								href="#" class="btn btn-secondary btn-sm disabled fw-bold">Indisponível</a>
 
 							<!-- Se o usuário já estiver na carona -->
-							<!-- 							<a -->
-							<!-- 								th:if="${c.estouNaCarona} and !${c.cancelada} and !${c.esgotada}" -->
-							<!-- 								href="/caronas/detalhes" class="btn btn-outline-danger btn-sm">Sair -->
-							<!-- 								da Carona</a> -->
-
 							<form
 								th:if="${c.estouNaCarona} and !${c.cancelada} and !${c.souMotorista}"
 								th:action="@{/caronas/{id}/sair(id=${c.id})}" method="post">
@@ -95,15 +89,16 @@
 							</form>
 
 							<!-- Se estiver disponível e o usuário NÃO estiver nela -->
-							<!-- 							<a -->
-							<!-- 								th:if="!${c.estouNaCarona} and !${c.cancelada} and !${c.esgotada}" -->
-							<!-- 								href="/caronas/detalhes" class="btn btn-outline-success btn-sm">Reservar</a> -->
-
 							<form
 								th:if="!${c.estouNaCarona} and !${c.cancelada} and !${c.esgotada}"
 								th:action="@{/caronas/{id}/reservar(id=${c.id})}" method="post">
 								<button type="submit" class="btn btn-outline-success btn-sm">Reservar</button>
 							</form>
+							
+							<!-- Se o usuário for o motorista -->
+							<a th:if="${c.souMotorista}" 
+								th:href="@{/caronas/{id}/editar(id=${c.id})}"
+								class="btn btn-outline-primary btn-sm">Editar</a>
 
 							<!-- Botão de Detalhes (Sempre aparece) -->
 							<a th:href="@{/caronas/{id}(id=${c.id})}"
