@@ -68,7 +68,7 @@
 
 				<!-- Botões de Ação (Apenas exibidos se a carona NÃO estiver cancelada) -->
 				<div class="d-flex gap-2 justify-content-end"
-					th:if="!${carona.cancelada}">
+					th:if="!${carona.cancelada} and ${carona.data.isAfter(#temporals.createNow())}">
 					<!-- Botão Reservar Vaga -->
 					<form th:if="!${carona.estouNaCarona} and !${carona.esgotada}"
 						th:action="@{/caronas/{id}/reservar(id=${carona.id})}"

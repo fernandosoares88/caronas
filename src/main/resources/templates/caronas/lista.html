@@ -18,7 +18,8 @@
 	<h3 class="mb-3">Próximas caronas</h3>
 	<div class="row">
 		<!-- Cartão 1: Carona Disponível (Destacado) -->
-		<div th:fragment="lista-caronas" th:each="c: ${caronas}" class="col-md-4 mb-3">
+		<div th:fragment="lista-caronas" th:each="c: ${caronas}"
+			class="col-md-4 mb-3">
 
 			<!-- Cartão Dinâmico: Altera a borda e o fundo dependendo do estado da carona -->
 			<div class="card h-100 shadow"
@@ -75,30 +76,34 @@
 							th:text="${#numbers.formatCurrency(c.valor)}">R$ 35,00</span>
 
 						<div class="d-flex gap-2">
+
 							<!-- Se estiver cancelada ou esgotada -->
 							<a
 								th:if="${c.cancelada} or (${c.esgotada} and !${c.estouNaCarona})"
 								href="#" class="btn btn-secondary btn-sm disabled fw-bold">Indisponível</a>
 
-							<!-- Se o usuário já estiver na carona -->
-							<form
-								th:if="${c.estouNaCarona} and !${c.cancelada} and !${c.souMotorista}"
-								th:action="@{/caronas/{id}/sair(id=${c.id})}" method="post">
-								<button type="submit" class="btn btn-outline-danger btn-sm">Sair
-									da Carona</button>
-							</form>
+							<div th:if="${c.data.isAfter(#temporals.createNow())}">
+								<!-- Se o usuário já estiver na carona -->
+								<form
+									th:if="${c.estouNaCarona} and !${c.cancelada} and !${c.souMotorista}"
+									th:action="@{/caronas/{id}/sair(id=${c.id})}" method="post">
+									<button type="submit" class="btn btn-outline-danger btn-sm">Sair
+										da Carona</button>
+								</form>
 
-							<!-- Se estiver disponível e o usuário NÃO estiver nela -->
-							<form
-								th:if="!${c.estouNaCarona} and !${c.cancelada} and !${c.esgotada}"
-								th:action="@{/caronas/{id}/reservar(id=${c.id})}" method="post">
-								<button type="submit" class="btn btn-outline-success btn-sm">Reservar</button>
-							</form>
-							
-							<!-- Se o usuário for o motorista -->
-							<a th:if="${c.souMotorista}" 
-								th:href="@{/caronas/{id}/editar(id=${c.id})}"
-								class="btn btn-outline-primary btn-sm">Editar</a>
+								<!-- Se estiver disponível e o usuário NÃO estiver nela -->
+								<form
+									th:if="!${c.estouNaCarona} and !${c.cancelada} and !${c.esgotada}"
+									th:action="@{/caronas/{id}/reservar(id=${c.id})}" method="post">
+									<button type="submit" class="btn btn-outline-success btn-sm">Reservar</button>
+								</form>
+
+								<!-- Se o usuário for o motorista, a carona não estiver cancelada e a data for futura -->
+								<a
+									th:if="${c.souMotorista} and !${c.cancelada}"
+									th:href="@{/caronas/{id}/editar(id=${c.id})}"
+									class="btn btn-outline-primary btn-sm">Editar</a>
+							</div>
 
 							<!-- Botão de Detalhes (Sempre aparece) -->
 							<a th:href="@{/caronas/{id}(id=${c.id})}"
@@ -111,158 +116,6 @@
 
 		</div>
 	</div>
-
-	<!-- 	<!-- Últimas Caronas Disponíveis -->
-
-	<!-- 	<h3 class="mb-3">Modelos de cartões</h3> -->
-	<!-- 	<div class="row"> -->
-	<!-- 		<!-- Cartão 1: Carona Disponível (Destacado) -->
-
-	<!-- 		<div class="col-md-4 mb-3"> -->
-	<!-- 			<div class="card h-100 shadow border-primary border-2 "> -->
-	<!-- 				<div class="card-body d-flex flex-column"> -->
-	<!-- 					<div class="d-flex justify-content-between align-items-start mb-2"> -->
-	<!-- 						<h5 class="card-title text-primary fw-bold mb-0">Natal ➔ -->
-	<!-- 							Lajes</h5> -->
-	<!-- 						<span class="badge bg-primary fs-6"><i -->
-	<!-- 							class="bi bi-car-front"></i> DISPONÍVEL</span> -->
-	<!-- 					</div> -->
-	<!-- 					<h6 class="card-subtitle mb-2 text-muted">15/06/2026 08:00</h6> -->
-	<!-- 					<p class="card-text mb-1"> -->
-	<!-- 						<strong>Motorista:</strong> <span>João Silva</span> -->
-	<!-- 					</p> -->
-	<!-- 					<p class="card-text mb-1 text-primary fw-semibold"> -->
-	<!-- 						<strong>Passageiros:</strong> -->
-	<!-- 					</p> -->
-	<!-- 					<ol class="small text-muted ps-3 mb-3"> -->
-	<!-- 						<li>Maria Souza</li> -->
-	<!-- 						<li>Carlos Eduardo</li> -->
-	<!-- 						<li></li> -->
-	<!-- 					</ol> -->
-	<!-- 					<div -->
-	<!-- 						class="d-flex justify-content-between align-items-center mt-auto"> -->
-	<!-- 						<span class="fs-5 fw-bold text-success">R$ 35,00</span> -->
-	<!-- 						<div class="d-flex gap-2"> -->
-	<!-- 							<a href="/caronas/detalhes" -->
-	<!-- 								class="btn btn-outline-success btn-sm">Reservar</a> <a -->
-	<!-- 								href="/caronas/detalhes" class="btn btn-outline-primary btn-sm">Mais -->
-	<!-- 								Detalhes</a> -->
-	<!-- 						</div> -->
-	<!-- 					</div> -->
-	<!-- 				</div> -->
-	<!-- 			</div> -->
-	<!-- 		</div> -->
-
-	<!-- 		<!-- Cartão 2: Carona Lotada (Altamente Destacado / Esgotado) -->
-
-	<!-- 		<div class="col-md-4 mb-3"> -->
-	<!-- 			<div -->
-	<!-- 				class="card h-100 shadow border-danger border-2 bg-danger bg-opacity-10 opacity-75"> -->
-	<!-- 				<div class="card-body d-flex flex-column"> -->
-	<!-- 					<div class="d-flex justify-content-between align-items-start mb-2"> -->
-	<!-- 						<h5 class="card-title text-danger fw-bold mb-0">Natal ➔ Lajes</h5> -->
-	<!-- 						<span class="badge bg-danger fs-6"><i -->
-	<!-- 							class="bi bi-slash-circle-fill"></i> ESGOTADA</span> -->
-	<!-- 					</div> -->
-	<!-- 					<h6 class="card-subtitle mb-2 text-muted">15/06/2026 08:00</h6> -->
-	<!-- 					<p class="card-text mb-1"> -->
-	<!-- 						<strong>Motorista:</strong> <span>João Silva</span> -->
-	<!-- 					</p> -->
-	<!-- 					<p class="card-text mb-1 text-danger fw-bold"> -->
-	<!-- 						<strong>Passageiros:</strong> -->
-	<!-- 					</p> -->
-	<!-- 					<ol class="small text-dark ps-3 mb-3"> -->
-	<!-- 						<li>Maria Souza</li> -->
-	<!-- 						<li>Carlos Eduardo</li> -->
-	<!-- 						<li>Ana Paula</li> -->
-	<!-- 					</ol> -->
-	<!-- 					<div -->
-	<!-- 						class="d-flex justify-content-between align-items-center mt-auto"> -->
-	<!-- 						<span class="fs-5 fw-bold text-muted text-decoration-line-through">R$ -->
-	<!-- 							35,00</span> -->
-	<!-- 						<div class="d-flex gap-2"> -->
-	<!-- 							<a href="#" class="btn btn-secondary btn-sm disabled fw-bold">Indisponível</a> -->
-	<!-- 						</div> -->
-	<!-- 					</div> -->
-	<!-- 				</div> -->
-	<!-- 			</div> -->
-	<!-- 		</div> -->
-
-	<!-- 		<!-- Cartão 3: Usuário já está na carona (Layout Destacado) -->
-
-	<!-- 		<div class="col-md-4 mb-3"> -->
-	<!-- 			<div -->
-	<!-- 				class="card h-100 shadow border-success border-2 bg-success bg-opacity-10"> -->
-	<!-- 				<div class="card-body d-flex flex-column"> -->
-	<!-- 					<div class="d-flex justify-content-between align-items-start mb-2"> -->
-	<!-- 						<h5 class="card-title text-success fw-bold mb-0">Natal ➔ -->
-	<!-- 							Lajes</h5> -->
-	<!-- 						<span class="badge bg-success fs-6"><i -->
-	<!-- 							class="bi bi-check-circle-fill"></i> Confirmada</span> -->
-	<!-- 					</div> -->
-	<!-- 					<h6 class="card-subtitle mb-2 text-muted">15/06/2026 08:00</h6> -->
-	<!-- 					<p class="card-text mb-1"> -->
-	<!-- 						<strong>Motorista:</strong> <span>João Silva</span> -->
-	<!-- 					</p> -->
-	<!-- 					<p class="card-text mb-1 text-success fw-semibold"> -->
-	<!-- 						<strong>Passageiros:</strong> -->
-	<!-- 					</p> -->
-	<!-- 					<ol class="small text-success ps-3 mb-3"> -->
-	<!-- 						<li>Você (Usuário Atual)</li> -->
-	<!-- 						<li>Ana Paula</li> -->
-	<!-- 						<li></li> -->
-	<!-- 					</ol> -->
-	<!-- 					<div -->
-	<!-- 						class="d-flex justify-content-between align-items-center mt-auto"> -->
-	<!-- 						<span class="fs-5 fw-bold text-success">R$ 35,00</span> -->
-	<!-- 						<div class="d-flex gap-2"> -->
-	<!-- 							<a href="/caronas/detalhes" class="btn btn-outline-danger btn-sm">Sair -->
-	<!-- 								da Carona</a><a href="/caronas/detalhes" -->
-	<!-- 								class="btn btn-outline-danger btn-sm">Sair da Carona</a> <a -->
-	<!-- 								href="/caronas/detalhes" class="btn btn-outline-primary btn-sm">Mais -->
-	<!-- 								Detalhes</a> -->
-	<!-- 						</div> -->
-	<!-- 					</div> -->
-	<!-- 				</div> -->
-	<!-- 			</div> -->
-	<!-- 		</div> -->
-
-	<!-- 		<!-- Cartão 4: Carona Cancelada -->
-
-	<!-- 		<div class="col-md-4 mb-3"> -->
-	<!-- 			<div -->
-	<!-- 				class="card h-100 shadow border-secondary border-2 bg-secondary bg-opacity-10 opacity-75"> -->
-	<!-- 				<div class="card-body d-flex flex-column"> -->
-	<!-- 					<div class="d-flex justify-content-between align-items-start mb-2"> -->
-	<!-- 						<h5 class="card-title text-secondary fw-bold mb-0">Natal ➔ -->
-	<!-- 							Lajes</h5> -->
-	<!-- 						<span class="badge bg-secondary fs-6"><i -->
-	<!-- 							class="bi bi-x-circle-fill"></i> CANCELADA</span> -->
-	<!-- 					</div> -->
-	<!-- 					<h6 class="card-subtitle mb-2 text-muted">15/06/2026 08:00</h6> -->
-	<!-- 					<p class="card-text mb-1"> -->
-	<!-- 						<strong>Motorista:</strong> <span>João Silva</span> -->
-	<!-- 					</p> -->
-	<!-- 					<p class="card-text mb-1 text-secondary fw-bold"> -->
-	<!-- 						<strong>Passageiros:</strong> -->
-	<!-- 					</p> -->
-	<!-- 					<ol class="small text-dark ps-3 mb-3"> -->
-	<!-- 						<li>Maria Souza</li> -->
-	<!-- 						<li></li> -->
-	<!-- 						<li></li> -->
-	<!-- 					</ol> -->
-	<!-- 					<div -->
-	<!-- 						class="d-flex justify-content-between align-items-center mt-auto"> -->
-	<!-- 						<span class="fs-5 fw-bold text-muted text-decoration-line-through">R$ -->
-	<!-- 							35,00</span> -->
-	<!-- 						<div class="d-flex gap-2"> -->
-	<!-- 							<a href="#" class="btn btn-secondary btn-sm disabled fw-bold">Indisponível</a> -->
-	<!-- 						</div> -->
-	<!-- 					</div> -->
-	<!-- 				</div> -->
-	<!-- 			</div> -->
-	<!-- 		</div> -->
-	<!-- 	</div> -->
 
 </section>
 </html>
