@@ -1,10 +1,13 @@
 package br.ifrn.caronas.controllers;
 
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -54,7 +57,8 @@ public class CaronasController {
 	 * @return
 	 */
 	@PostMapping
-	public String salvar(@Valid CaronaFormDTO caronaFormDTO, BindingResult result, RedirectAttributes attributes, @AuthenticationPrincipal Usuario usuarioLogado) {
+	public String salvar(@Valid CaronaFormDTO caronaFormDTO, BindingResult result, RedirectAttributes attributes,
+			@AuthenticationPrincipal Usuario usuarioLogado) {
 
 		if (result.hasErrors()) {
 			return form(caronaFormDTO, usuarioLogado);
@@ -111,7 +115,8 @@ public class CaronasController {
 	}
 
 	@GetMapping("/{id}/editar")
-	public ModelAndView editarSelecionarCarona(@PathVariable Long id, RedirectAttributes attributes, @AuthenticationPrincipal Usuario usuarioLogado) {
+	public ModelAndView editarSelecionarCarona(@PathVariable Long id, RedirectAttributes attributes,
+			@AuthenticationPrincipal Usuario usuarioLogado) {
 		Optional<Carona> optional = cr.findById(id);
 		ModelAndView md = new ModelAndView();
 
@@ -145,7 +150,8 @@ public class CaronasController {
 	 * @return
 	 */
 	@PostMapping("/{id}/reservar")
-	public ModelAndView reservar(@PathVariable Long id, RedirectAttributes attributes, @AuthenticationPrincipal Usuario usuarioLogado) {
+	public ModelAndView reservar(@PathVariable Long id, RedirectAttributes attributes,
+			@AuthenticationPrincipal Usuario usuarioLogado) {
 		Optional<Carona> optional = cr.findById(id);
 		ModelAndView md = new ModelAndView();
 		md.setViewName("redirect:/caronas");
@@ -157,12 +163,13 @@ public class CaronasController {
 		}
 
 		Carona carona = optional.get();
-		
+
 		/** Validação: Só permite reservar se a data da carona for futura **/
-	    if (!carona.getData().isAfter(LocalDateTime.now())) {
-	        attributes.addFlashAttribute("msg", "Esta carona já ocorreu ou está ocorrendo, não é possível fazer reserva.");
-	        return md;
-	    }
+		if (!carona.getData().isAfter(LocalDateTime.now())) {
+			attributes.addFlashAttribute("msg",
+					"Esta carona já ocorreu ou está ocorrendo, não é possível fazer reserva.");
+			return md;
+		}
 
 		/** Verifica se o usuário já está na carona como motorista ou passageiro **/
 		if (carona.getMotorista().equals(usuarioLogado)) {
@@ -192,7 +199,8 @@ public class CaronasController {
 	}
 
 	@PostMapping("/{id}/sair")
-	public ModelAndView sair(@PathVariable Long id, RedirectAttributes attributes, @AuthenticationPrincipal Usuario usuarioLogado) {
+	public ModelAndView sair(@PathVariable Long id, RedirectAttributes attributes,
+			@AuthenticationPrincipal Usuario usuarioLogado) {
 		Optional<Carona> optional = cr.findById(id);
 		ModelAndView md = new ModelAndView();
 		md.setViewName("redirect:/caronas");
@@ -202,12 +210,12 @@ public class CaronasController {
 		}
 
 		Carona carona = optional.get();
-		
+
 		/** Validação: Só permite sair se a data da carona for futura **/
-	    if (!carona.getData().isAfter(LocalDateTime.now())) {
-	        attributes.addFlashAttribute("msg", "Esta carona já ocorreu, não é possível sair dela.");
-	        return md;
-	    }
+		if (!carona.getData().isAfter(LocalDateTime.now())) {
+			attributes.addFlashAttribute("msg", "Esta carona já ocorreu, não é possível sair dela.");
+			return md;
+		}
 
 		if (carona.getMotorista().equals(usuarioLogado)) {
 			attributes.addFlashAttribute("msg", "O motorista não pode sair da carona");
@@ -228,7 +236,8 @@ public class CaronasController {
 	}
 
 	@PostMapping("/{id}/cancelar")
-	public ModelAndView cancelarCarona(@PathVariable Long id, RedirectAttributes attributes, @AuthenticationPrincipal Usuario usuarioLogado) {
+	public ModelAndView cancelarCarona(@PathVariable Long id, RedirectAttributes attributes,
+			@AuthenticationPrincipal Usuario usuarioLogado) {
 		Optional<Carona> optional = cr.findById(id);
 		ModelAndView md = new ModelAndView();
 
@@ -244,12 +253,12 @@ public class CaronasController {
 			attributes.addFlashAttribute("msg", "Você não tem permissão para cancelar essa carona");
 			return md;
 		}
-		
+
 		/** Validação: Só permite cancelar se a data da carona for futura **/
-	    if (!carona.getData().isAfter(LocalDateTime.now())) {
-	        attributes.addFlashAttribute("msg", "Esta carona já ocorreu, não é possível cancelá-la.");
-	        return md;
-	    }
+		if (!carona.getData().isAfter(LocalDateTime.now())) {
+			attributes.addFlashAttribute("msg", "Esta carona já ocorreu, não é possível cancelá-la.");
+			return md;
+		}
 
 		carona.setCancelada(true);
 		cr.save(carona);
@@ -259,7 +268,8 @@ public class CaronasController {
 	}
 
 	@GetMapping("/{id}")
-	public ModelAndView detalhes(@PathVariable Long id, RedirectAttributes attributes, @AuthenticationPrincipal Usuario usuarioLogado) {
+	public ModelAndView detalhes(@PathVariable Long id, RedirectAttributes attributes,
+			@AuthenticationPrincipal Usuario usuarioLogado) {
 		Optional<Carona> optional = cr.findById(id);
 		ModelAndView md = new ModelAndView();
 		if (optional.isEmpty()) {
@@ -273,33 +283,57 @@ public class CaronasController {
 	}
 
 	@GetMapping
-	public ModelAndView lista(@AuthenticationPrincipal Usuario usuarioLogado) {
-		
-		System.out.println("Usuario logado" + usuarioLogado);
+	public ModelAndView lista(@AuthenticationPrincipal Usuario usuarioLogado,
+	        @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime dataInicio,
+	        @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime dataFim,
+	        Boolean minhas) {
 
-		LocalDateTime umaHoraAtras = LocalDateTime.now().minusHours(1);
+	    if (dataInicio == null)
+	        dataInicio = LocalDateTime.now().minusHours(1);
+//	    if (dataFim == null)
+//	        dataFim = LocalDateTime.now().plusDays(15);
 
-		System.out.println("Hora Servidor - 1 hora: " + umaHoraAtras);
+	    LocalDateTime agora = LocalDateTime.now();
+	    DayOfWeek diaSemana = agora.getDayOfWeek();
 
-		List<Carona> all = cr.findByDataAfterAndCanceladaFalseOrderByDataAsc(umaHoraAtras);
+	    if (dataFim == null) {
+	        if (diaSemana.getValue() < DayOfWeek.FRIDAY.getValue()) {
+	            dataFim = dataInicio.with(TemporalAdjusters.next(DayOfWeek.SUNDAY));
+	        } else {
+	            dataFim = dataInicio.plusWeeks(1).with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
+	        }
+	        dataFim = dataFim.toLocalDate().atTime(23, 59, 59);
+	    }
+	    
+	    List<Carona> all;
 
-		List<CaronaItemListaDTO> caronas = CaronaItemListaDTO.gerarCaronaItemListaDTO(all, usuarioLogado);
+	    if (Boolean.TRUE.equals(minhas)) {
+	        all = cr.findCaronasEnvolvidasUsuarioEntreDatas(usuarioLogado, dataInicio, dataFim);
+	    } else {
+	        all = cr.findByDataBetweenAndCanceladaFalseOrderByDataAsc(dataInicio, dataFim);
+	    }
 
-		ModelAndView md = new ModelAndView("caronas/lista");
-		md.addObject("caronas", caronas);
-		return md;
+	    List<CaronaItemListaDTO> caronas = CaronaItemListaDTO.gerarCaronaItemListaDTO(all, usuarioLogado);
+
+	    ModelAndView md = new ModelAndView("caronas/lista"); 
+	    md.addObject("caronas", caronas);
+	    md.addObject("dataInicio", dataInicio);
+	    md.addObject("dataFim", dataFim);
+	    md.addObject("minhas", minhas); 
+
+	    return md;
 	}
 
-	@GetMapping("/minhas")
-	public ModelAndView listaMinhas(@AuthenticationPrincipal Usuario usuarioLogado) {
-
-		List<Carona> all = cr.findCaronasEnvolvidasUsuario(usuarioLogado);
-
-		List<CaronaItemListaDTO> caronas = CaronaItemListaDTO.gerarCaronaItemListaDTO(all, usuarioLogado);
-
-		ModelAndView md = new ModelAndView("caronas/lista-minhas");
-		md.addObject("caronas", caronas);
-		return md;
-	}
+//	@GetMapping("/minhas")
+//	public ModelAndView listaMinhas(@AuthenticationPrincipal Usuario usuarioLogado) {
+//
+//		List<Carona> all = cr.findCaronasEnvolvidasUsuario(usuarioLogado);
+//
+//		List<CaronaItemListaDTO> caronas = CaronaItemListaDTO.gerarCaronaItemListaDTO(all, usuarioLogado);
+//
+//		ModelAndView md = new ModelAndView("caronas/lista-minhas");
+//		md.addObject("caronas", caronas);
+//		return md;
+//	}
 
 }

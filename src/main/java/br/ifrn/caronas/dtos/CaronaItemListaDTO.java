@@ -25,6 +25,7 @@ public class CaronaItemListaDTO {
 	private boolean estouNaCarona;
 	private boolean souMotorista;
 	private boolean esgotada;
+	private boolean realizada;
 	private List<String> passageiros;
 	
 	public static List<CaronaItemListaDTO> gerarCaronaItemListaDTO(List<Carona> caronas, Usuario usuario) {
@@ -50,12 +51,12 @@ public class CaronaItemListaDTO {
 									.valor(carona.getValor())
 									.build();
 
-		if (carona.getMotorista().getId() == usuario.getId()) {
+		if (carona.getMotorista().equals(usuario)) {
 			dto.setEstouNaCarona(true);
 			dto.setSouMotorista(true);
 		} else {
 			for (Usuario p : carona.getPassageiros()) {
-				if (p.getId() == usuario.getId()) {
+				if (p.equals(usuario)) {
 					dto.setEstouNaCarona(true);
 					break;
 				}
@@ -68,6 +69,7 @@ public class CaronaItemListaDTO {
 		}
 
 		dto.setEsgotada(carona.getVagas() == carona.getPassageiros().size());
+		dto.setRealizada(carona.getData().isBefore(LocalDateTime.now()));
 		return dto;
 	}
 	
