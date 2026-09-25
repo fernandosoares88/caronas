@@ -18,7 +18,7 @@
 	<h3 class="mb-3">Próximas caronas</h3>
 	<div class="row">
 		<!-- Cartão 1: Carona Disponível (Destacado) -->
-		<div th:each="c: ${caronas}" class="col-md-4 mb-3">
+		<div th:fragment="lista-caronas" th:each="c: ${caronas}" class="col-md-4 mb-3">
 
 			<!-- Cartão Dinâmico: Altera a borda e o fundo dependendo do estado da carona -->
 			<div class="card h-100 shadow"
