@@ -4,9 +4,15 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card shadow-sm p-4">
-                <h2 class="mb-4 text-center">Oferecer Carona</h2>
+                <h2 class="mb-4 text-center" 
+                    th:text="${caronaFormDTO.id != null} ? 'Editar carona' : 'Oferecer carona'">
+                    Oferecer Carona
+                </h2>
                 
-                <form th:action="@{/caronas}" method="post" th:object="${caronaRequestDTO}">
+                <form th:action="@{/caronas}" method="post" th:object="${caronaFormDTO}">
+                    
+                    <input type="hidden" th:field="*{id}" />
+                    
                     <div class="mb-3">
                         <label for="rota" class="form-label">Rota</label>
                         <select class="form-select" th:field="*{direcao}" required>
@@ -36,7 +42,10 @@
                         <textarea class="form-control" th:field="*{observacoes}" rows="3" placeholder="Ex: Não fumar, aceito animais de pequeno porte, malas pequenas..."></textarea>
                     </div>
 
-                    <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">Publicar Carona</button>
+                    <button type="submit" class="btn btn-primary w-100 py-2 fw-bold" 
+                            th:text="${caronaFormDTO.id != null} ? 'Salvar Alterações' : 'Publicar Carona'">
+                        Publicar Carona
+                    </button>
                 </form>
             </div>
         </div>

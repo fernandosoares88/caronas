@@ -2,54 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	th:replace="~{layout :: html(template=~{::section})}">
 <section>
-	<div class="row justify-content-center">
-		<div class="col-md-8">
-			<div class="card shadow-sm p-4">
-				<h2 class="mb-4 text-center">Oferecer Carona</h2>
-
-<!-- 				<form method="post"> -->
-<!-- 					<div class="mb-3"> -->
-<!-- 						<label for="rota" class="form-label">Rota</label> <select -->
-<!-- 							class="form-select" id="rota" required> -->
-<!-- 							<option value="" disabled selected>Selecione a rota</option> -->
-<!-- 							<option value="Natal-Lajes">Natal ➔ Lajes</option> -->
-<!-- 							<option value="Lajes-Natal">Lajes ➔ Natal</option> -->
-<!-- 						</select> -->
-<!-- 					</div> -->
-
-<!-- 					<div class="row mb-3"> -->
-<!-- 						<div class="col-md-6"> -->
-<!-- 							<label for="dataHora" class="form-label">Data e Horário -->
-<!-- 								de Partida</label> <input type="datetime-local" class="form-control" -->
-<!-- 								id="dataHora" required> -->
-<!-- 						</div> -->
-<!-- 						<div class="col-md-3"> -->
-<!-- 							<label for="vagasDisponiveis" class="form-label">Vagas</label> <input -->
-<!-- 								type="number" class="form-control" id="vagasDisponiveis" min="1" -->
-<!-- 								max="6" required> -->
-<!-- 						</div> -->
-<!-- 						<div class="col-md-3"> -->
-<!-- 							<label for="valor" class="form-label">Valor por Vaga (R$)</label> -->
-<!-- 							<input type="number" step="0.01" class="form-control" id="valor" -->
-<!-- 								required placeholder="0.00"> -->
-<!-- 						</div> -->
-<!-- 					</div> -->
-
-<!-- 					<div class="mb-3"> -->
-<!-- 						<label for="observacoes" class="form-label">Observações / -->
-<!-- 							Regras</label> -->
-<!-- 						<textarea class="form-control" id="observacoes" rows="3" -->
-<!-- 							placeholder="Ex: Não fumar, aceito animais de pequeno porte, malas pequenas..."></textarea> -->
-<!-- 					</div> -->
-
-<!-- 					<button type="submit" class="btn btn-primary w-100 py-2 fw-bold">Publicar -->
-<!-- 						Carona</button> -->
-<!-- 				</form> -->
+	<div class="row justify-content-center my-5"> <!-- Adicionado my-5 para afastar do topo/baixo da página -->
+		<div class="col-md-6"> <!-- Reduzido levemente a largura para dar destaque ao card central -->
+			<div class="card shadow-sm p-5"> <!-- Aumentado de p-4 para p-5 para mais espaço interno -->
+				<h2 class="mb-4 text-center">Deseja realmente sair?</h2>
 
 				<form th:action="@{/logout}" method="post">
-					<div class="mb-3">
-						<h5 class="col-md-12">Deseja realmente sair?</h5>
-					</div>
 					<div class="row mb-3">
 						<div class="col-md-12">
 							<button class="btn btn-primary w-100 py-2 fw-bold"
