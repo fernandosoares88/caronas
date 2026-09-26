@@ -20,6 +20,12 @@
 							name="password" required placeholder="Sua senha">
 					</div>
 
+					<div class="mb-3 form-check">
+						<input type="checkbox" class="form-check-input" id="remember-me"
+							name="remember-me"> <label class="form-check-label"
+							for="remember-me">Lembrar de mim</label>
+					</div>
+
 					<button type="submit"
 						class="btn btn-primary w-100 py-2 fw-bold mb-3">Entrar</button>
 
@@ -34,39 +40,51 @@
 		</div>
 	</div>
 	<script>
-    document.addEventListener('input', function (e) {
-        if (e.target && (e.target.id === 'telefone' || e.target.id === 'username')) {
-            let input = e.target;
-            let v = input.value.replace(/\D/g, '');
-            
-            if (input.dataset.backspace === 'true') {
-                delete input.dataset.backspace;
-                input.value = v;
-                return;
-            }
-            
-            if (v.length > 11) v = v.slice(0, 11);
-            
-            if (v.length > 6) {
-                input.value = '(' + v.substring(0,2) + ') ' + v.substring(2,7) + '-' + v.substring(7,11);
-            } else if (v.length > 2) {
-                input.value = '(' + v.substring(0,2) + ') ' + v.substring(2,7);
-            } else if (v.length > 0) {
-                input.value = '(' + v;
-            } else {
-                input.value = '';
-            }
-        }
-    });
+		document
+				.addEventListener(
+						'input',
+						function(e) {
+							if (e.target
+									&& (e.target.id === 'telefone' || e.target.id === 'username')) {
+								let input = e.target;
+								let v = input.value.replace(/\D/g, '');
 
-    document.addEventListener('keydown', function (e) {
-        if (e.target && (e.target.id === 'telefone' || e.target.id === 'username')) {
-            if (e.key === 'Backspace') {
-                e.target.dataset.backspace = 'true';
-            }
-        }
-    });
-</script>
+								if (input.dataset.backspace === 'true') {
+									delete input.dataset.backspace;
+									input.value = v;
+									return;
+								}
+
+								if (v.length > 11)
+									v = v.slice(0, 11);
+
+								if (v.length > 6) {
+									input.value = '(' + v.substring(0, 2)
+											+ ') ' + v.substring(2, 7) + '-'
+											+ v.substring(7, 11);
+								} else if (v.length > 2) {
+									input.value = '(' + v.substring(0, 2)
+											+ ') ' + v.substring(2, 7);
+								} else if (v.length > 0) {
+									input.value = '(' + v;
+								} else {
+									input.value = '';
+								}
+							}
+						});
+
+		document
+				.addEventListener(
+						'keydown',
+						function(e) {
+							if (e.target
+									&& (e.target.id === 'telefone' || e.target.id === 'username')) {
+								if (e.key === 'Backspace') {
+									e.target.dataset.backspace = 'true';
+								}
+							}
+						});
+	</script>
 </section>
 
 </html>
