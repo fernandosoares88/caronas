@@ -22,9 +22,6 @@ public class WebSecurityConfig {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-	    
-		System.out.println("ALERT:TESTE:::: => RememberKey: " + rememberMeKey);
-		
 		http.authorizeHttpRequests((requests) -> requests
 	            .requestMatchers("/", "/cadastro").permitAll()
 	            .anyRequest().authenticated())
