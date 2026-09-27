@@ -135,9 +135,9 @@ public class CaronasController {
 		}
 
 		md.setViewName("caronas/form");
-		md.addObject("caronaFormDTO", CaronaFormDTO.gerarCaronaRequestDTO(carona));
+		md.addObject("caronaFormDTO", CaronaFormDTO.converter(carona));
 		System.out.println(carona);
-		System.out.println(CaronaFormDTO.gerarCaronaRequestDTO(carona));
+		System.out.println(CaronaFormDTO.converter(carona));
 
 		return md;
 	}

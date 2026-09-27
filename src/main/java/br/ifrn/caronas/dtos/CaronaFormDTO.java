@@ -31,7 +31,7 @@ public class CaronaFormDTO {
 				.build();
 	}
 	
-	public static CaronaFormDTO gerarCaronaRequestDTO(Carona carona) {
+	public static CaronaFormDTO converter(Carona carona) {
 		return CaronaFormDTO.builder()
 				.id(carona.getId())
 				.direcao(carona.getDirecao())
