@@ -45,10 +45,19 @@
 						<strong>Nome:</strong> <span th:text="${carona.motorista}">Carlos
 							Souza</span>
 					</p>
-					<p class="mb-0">
+					<p class="mb-0 d-inline-flex align-items-center gap-2">
 						<strong>Contato:</strong> <span
 							th:text="${carona.motoristaTelefone}">(11) 98888-7777</span>
+
+						<!-- Botão com apenas o ícone do WhatsApp, exibido apenas se o passageiro estiver na carona -->
+						<a
+							th:if="${carona.estouNaCarona} and !${carona.souMotorista} and !${carona.cancelada}"
+							th:href="@{https://api.whatsapp.com/send(phone=${'55' + carona.motoristaTelefone.replaceAll('[^0-9]', '')}, text=${'Olá, coloquei meu nome na carona para o dia ' + #temporals.format(carona.data, 'dd/MM/yyyy') + ' às ' + #temporals.format(carona.data, 'HH:mm') + '.'})}"
+							target="_blank" class="btn btn-success btn-sm p-1 lh-1"
+							title="Avisar no WhatsApp"> <i class="bi bi-whatsapp fs-6"></i>
+						</a>
 					</p>
+
 				</div>
 
 				<div class="card bg-light border-0 p-3 mb-4">
@@ -56,7 +65,16 @@
 						<span>Passageiros confirmados:</span>
 					</h5>
 					<ol>
-						<li th:each="p: ${carona.passageiros}"><span th:text="${p}"></span></li>
+						<li th:each="p: ${carona.passageiros}" class="mb-1">
+							<!-- Nome do passageiro --> <span th:text="${p.nome}">Nome
+								do Passageiro</span> <!-- Botão do WhatsApp para o motorista enviar mensagem ao passageiro (Exibido apenas se o usuário for o motorista e a carona não estiver cancelada) -->
+							<a th:if="${carona.souMotorista} and !${carona.cancelada}"
+							th:href="@{https://api.whatsapp.com/send(phone=${'55' + p.telefone.replaceAll('[^0-9]', '')}, text=${'Olá, confirma sua vaga na carona para o dia ' + #temporals.format(carona.data, 'dd/MM/yyyy') + ' às ' + #temporals.format(carona.data, 'HH:mm') + '?'})}"
+							target="_blank" class="btn btn-success btn-sm p-1 lh-1 ms-2"
+							th:title="'Confirmar carona com ' + ${p.nome}"> <i
+								class="bi bi-whatsapp fs-6"></i>
+							</a>
+						</li>
 					</ol>
 				</div>
 

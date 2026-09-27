@@ -278,7 +278,7 @@ public class CaronasController {
 			return md;
 		}
 		md.setViewName("caronas/detalhes");
-		md.addObject("carona", CaronaItemListaDTO.gerarCaronaItemListaDTO(optional.get(), usuarioLogado));
+		md.addObject("carona", CaronaItemListaDTO.converter(optional.get(), usuarioLogado));
 		return md;
 	}
 
@@ -313,7 +313,7 @@ public class CaronasController {
 	        all = cr.findByDataBetweenAndCanceladaFalseOrderByDataAsc(dataInicio, dataFim);
 	    }
 
-	    List<CaronaItemListaDTO> caronas = CaronaItemListaDTO.gerarCaronaItemListaDTO(all, usuarioLogado);
+	    List<CaronaItemListaDTO> caronas = CaronaItemListaDTO.converter(all, usuarioLogado);
 
 	    ModelAndView md = new ModelAndView("caronas/lista"); 
 	    md.addObject("caronas", caronas);
