@@ -99,7 +99,7 @@
             <!-- Lista de Vagas / Passageiros -->
             <ol class="small ps-3 mb-3 text-muted">
                 <li th:each="i : ${#numbers.sequence(0, c.vagas - 1)}">
-                    <span th:text="${i < c.passageiros.size() ? c.passageiros[i] : ''}"></span>
+                    <span th:text="${i < c.passageiros.size() ? c.passageiros[i].nome : ''}"></span>
                 </li>
             </ol>
 

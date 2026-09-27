@@ -26,19 +26,19 @@ public class CaronaItemListaDTO {
 	private boolean souMotorista;
 	private boolean esgotada;
 	private boolean realizada;
-	private List<String> passageiros;
+	private List<UsuarioDTO> passageiros;
 	
-	public static List<CaronaItemListaDTO> gerarCaronaItemListaDTO(List<Carona> caronas, Usuario usuario) {
+	public static List<CaronaItemListaDTO> converter(List<Carona> caronas, Usuario usuarioLogado) {
 		List<CaronaItemListaDTO> dtos = new ArrayList<CaronaItemListaDTO>();
 
 		for (Carona c : caronas) {
-			dtos.add(gerarCaronaItemListaDTO(c, usuario));
+			dtos.add(converter(c, usuarioLogado));
 		}
 
 		return dtos;
 	}
 
-	public static CaronaItemListaDTO gerarCaronaItemListaDTO(Carona carona, Usuario usuario) {
+	public static CaronaItemListaDTO converter(Carona carona, Usuario usuarioLogado) {
 		CaronaItemListaDTO dto = CaronaItemListaDTO.builder()
 									.id(carona.getId())
 									.direcao(carona.getDirecao())
@@ -49,23 +49,19 @@ public class CaronaItemListaDTO {
 									.observacoes(carona.getObservacoes())
 									.vagas(carona.getVagas())
 									.valor(carona.getValor())
+									.passageiros(UsuarioDTO.converter(carona.getPassageiros()))
 									.build();
 
-		if (carona.getMotorista().equals(usuario)) {
+		if (carona.getMotorista().equals(usuarioLogado)) {
 			dto.setEstouNaCarona(true);
 			dto.setSouMotorista(true);
 		} else {
 			for (Usuario p : carona.getPassageiros()) {
-				if (p.equals(usuario)) {
+				if (p.equals(usuarioLogado)) {
 					dto.setEstouNaCarona(true);
 					break;
 				}
 			}
-		}
-
-		dto.setPassageiros(new ArrayList<String>());
-		for (Usuario p : carona.getPassageiros()) {
-			dto.getPassageiros().add(p.getNome());
 		}
 
 		dto.setEsgotada(carona.getVagas() == carona.getPassageiros().size());
