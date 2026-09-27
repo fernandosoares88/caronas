@@ -69,7 +69,7 @@
 							<!-- Nome do passageiro --> <span th:text="${p.nome}">Nome
 								do Passageiro</span> <!-- Botão do WhatsApp para o motorista enviar mensagem ao passageiro (Exibido apenas se o usuário for o motorista e a carona não estiver cancelada) -->
 							<a th:if="${carona.souMotorista} and !${carona.cancelada}"
-							th:href="@{https://api.whatsapp.com/send(phone=${'55' + p.telefone.replaceAll('[^0-9]', '')}, text=${'Olá, confirma sua vaga na carona para o dia ' + #temporals.format(carona.data, 'dd/MM/yyyy') + ' às ' + #temporals.format(carona.data, 'HH:mm') + '?'})}"
+							th:href="@{https://api.whatsapp.com/send(phone=${'55' + p.telefone.replaceAll('[^0-9]', '')}, text=${'Olá, passando para confirmar sua vaga na minha carona para o dia ' + #temporals.format(carona.data, 'dd/MM/yyyy') + ' às ' + #temporals.format(carona.data, 'HH:mm') + '.'})}"
 							target="_blank" class="btn btn-success btn-sm p-1 lh-1 ms-2"
 							th:title="'Confirmar carona com ' + ${p.nome}"> <i
 								class="bi bi-whatsapp fs-6"></i>
