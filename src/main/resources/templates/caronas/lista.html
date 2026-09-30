@@ -22,7 +22,7 @@
 		<div class="card-body">
 			<form method="get" action="/caronas" class="row g-3 align-items-end"
 				hx-get="/caronas" hx-target="#lista-caronas-container"
-				hx-push-url="true" hx-trigger="change">
+				hx-push-url="true" hx-trigger="change" hx-indicator="#indicator">
 				<div class="col-md-4">
 					<label for="filtroDataInicio" class="form-label fw-bold">Data
 						Inicial:</label> <input type="datetime-local" id="filtroDataInicio"
@@ -31,28 +31,28 @@
 				</div>
 
 				<div class="col-md-4">
-					<label for="filtroDataFim" class="form-label fw-bold">Data Final:</label>
-					<input type="datetime-local" id="filtroDataFim" name="filtroDataFim"
-						class="form-control"
+					<label for="filtroDataFim" class="form-label fw-bold">Data
+						Final:</label> <input type="datetime-local" id="filtroDataFim"
+						name="filtroDataFim" class="form-control"
 						th:value="${filtroDataFim != null ? #temporals.format(filtroDataFim, 'yyyy-MM-dd''T''HH:mm') : ''}" />
 				</div>
 
 				<div class="col-md-3 d-flex align-items-center">
 					<div class="form-check form-switch mt-4">
-<!-- 						<input type="hidden" name="filtroMinhasCaronas" value="false" /> -->
-						<input class="form-check-input" type="checkbox" id="filtroMinhasCaronas"
-							name="filtroMinhasCaronas" value="true"
-							th:checked="${filtroMinhasCaronas != null and filtroMinhasCaronas}"> <label
-							class="form-check-label fw-bold" for="filtroMinhasCaronas">Apenas
+						<!-- 						<input type="hidden" name="filtroMinhasCaronas" value="false" /> -->
+						<input class="form-check-input" type="checkbox"
+							id="filtroMinhasCaronas" name="filtroMinhasCaronas" value="true"
+							th:checked="${filtroMinhasCaronas != null and filtroMinhasCaronas}">
+						<label class="form-check-label fw-bold" for="filtroMinhasCaronas">Apenas
 							Minhas Reservas</label>
 					</div>
 				</div>
 
 				<div class="col-md-1 d-flex align-items-rigth gap-2">
-					<button type="submit" class="btn btn-primary w-100">Filtrar</button>
+					<!-- 					<button type="submit" class="btn btn-primary w-100">Filtrar</button> -->
 					<a href="/caronas/limpar"
 						class="btn btn-outline-secondary d-flex align-items-center justify-content-center px-3"
-						title="Restaurar filtros padrões"> 
+						title="Restaurar filtros padrões">
 						<i class="bi bi-arrow-counterclockwise"></i>
 					</a>
 				</div>
@@ -62,7 +62,10 @@
 
 	<!-- Últimas Caronas Disponíveis -->
 	<h3 class="mb-3">Próximas caronas</h3>
+
 	<div id="lista-caronas-container">
+<!-- 		<img id="indicator" class="htmx-indicator" width="150" src="/imagens/bars.svg" -->
+<!-- 		alt="Loading..." /> -->
 		<div class="row">
 			<!-- Cartão 1: Carona Disponível (Destacado) -->
 			<div th:fragment="lista-caronas" th:each="c: ${caronas}"
@@ -87,7 +90,7 @@
 							<span class="badge fs-6"
 								th:classappend="${c.cancelada} ? 'bg-secondary' : (${c.realizada} ? 'bg-secondary' : (${c.esgotada} and !${c.estouNaCarona} ? 'bg-danger' : (${c.estouNaCarona} ? 'bg-success' : 'bg-primary')))">
 								<i class="bi"
-								th:classappend="${c.cancelada} ? 'bi-x-circle-fill' : (${c.realizada} ? 'bi-clock-history' : (${c.esgotada} and !${c.estouNaCarona} ? 'bi-slash-circle-fill' : (${c.estouNaCarona} ? 'bi-check-circle-fill' : 'bi-car-front')))"></i>
+									th:classappend="${c.cancelada} ? 'bi-x-circle-fill' : (${c.realizada} ? 'bi-clock-history' : (${c.esgotada} and !${c.estouNaCarona} ? 'bi-slash-circle-fill' : (${c.estouNaCarona} ? 'bi-check-circle-fill' : 'bi-car-front')))"></i>
 								<span
 								th:text="${c.cancelada} ? 'CANCELADA' : (${c.realizada} ? 'REALIZADA' : (${c.esgotada} and !${c.estouNaCarona} ? 'ESGOTADA' : (${c.estouNaCarona} ? 'Confirmada' : 'DISPONÍVEL')))">DISPONÍVEL</span>
 							</span>
@@ -109,8 +112,9 @@
 
 						<!-- Lista de Vagas / Passageiros -->
 						<ol class="small ps-3 mb-3 text-muted">
-							<li th:each="i : ${#numbers.sequence(0, c.vagas - 1)}"><span
-								th:text="${i < c.passageiros.size() ? c.passageiros[i].nome : ''}"></span>
+							<li th:each="i : ${#numbers.sequence(0, c.vagas - 1)}">
+								<span
+									th:text="${i < c.passageiros.size() ? c.passageiros[i].nome : ''}"></span>
 							</li>
 						</ol>
 
