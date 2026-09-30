@@ -23,6 +23,8 @@ import br.ifrn.caronas.dtos.CaronaItemListaDTO;
 import br.ifrn.caronas.models.Carona;
 import br.ifrn.caronas.models.Usuario;
 import br.ifrn.caronas.repositories.CaronaRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 @Controller
@@ -284,56 +286,88 @@ public class CaronasController {
 
 	@GetMapping
 	public ModelAndView lista(@AuthenticationPrincipal Usuario usuarioLogado,
-	        @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime dataInicio,
-	        @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime dataFim,
-	        Boolean minhas) {
+			@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime filtroDataInicio,
+			@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime filtroDataFim, 
+			Boolean filtroMinhasCaronas,
+			HttpServletRequest request,
+			HttpSession session) {
+		
+		// Verifica se a requisição veio via HTMX
+		boolean isHtmx = "true".equals(request.getHeader("HX-Request"));
+		Boolean filtroMinhasCaronasSessao = (Boolean) session.getAttribute("filtroMinhasCaronas");
+		
+		System.out.println("<=:::::::::::::::::::::::::::=>");
+		System.out.println("ANTES REQ ::=> " + filtroMinhasCaronas);
+		System.out.println("ANTES SES ::=> " + filtroMinhasCaronasSessao);
+		//Tenta recuperar valores da sessão
+		if (filtroDataInicio == null)
+			filtroDataInicio = (LocalDateTime) session.getAttribute("filtroDataInicio");
+		if (filtroDataFim == null) 
+			filtroDataFim = (LocalDateTime) session.getAttribute("filtroDataFim");
+		if (filtroMinhasCaronas == null && isHtmx)
+			filtroMinhasCaronas = Boolean.FALSE;
+		else if(filtroMinhasCaronas == null)
+			filtroMinhasCaronas = (Boolean) session.getAttribute("filtroMinhasCaronas");
+		
+//		System.out.println("DEPOIS ::=> " + filtroMinhasCaronas);
+			
+		// Cria valores padrões caso os filtros venham nulos
+		if (filtroDataInicio == null)
+			filtroDataInicio = LocalDateTime.now().minusHours(1);
 
-	    if (dataInicio == null)
-	        dataInicio = LocalDateTime.now().minusHours(1);
-//	    if (dataFim == null)
-//	        dataFim = LocalDateTime.now().plusDays(15);
+		if (filtroDataFim == null) {
+			LocalDateTime agora = LocalDateTime.now();
+			DayOfWeek diaSemana = agora.getDayOfWeek();
+			if (diaSemana.getValue() < DayOfWeek.FRIDAY.getValue()) {
+				filtroDataFim = filtroDataInicio.with(TemporalAdjusters.next(DayOfWeek.SUNDAY));
+			} else {
+				filtroDataFim = filtroDataInicio.plusWeeks(1).with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
+			}
+			filtroDataFim = filtroDataFim.toLocalDate().atTime(23, 59, 59);
+		}
+		
+//		if(filtroMinhasCaronas == null)
+//			filtroMinhasCaronas = Boolean.FALSE;
 
-	    LocalDateTime agora = LocalDateTime.now();
-	    DayOfWeek diaSemana = agora.getDayOfWeek();
+		List<Carona> all;
 
-	    if (dataFim == null) {
-	        if (diaSemana.getValue() < DayOfWeek.FRIDAY.getValue()) {
-	            dataFim = dataInicio.with(TemporalAdjusters.next(DayOfWeek.SUNDAY));
-	        } else {
-	            dataFim = dataInicio.plusWeeks(1).with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
-	        }
-	        dataFim = dataFim.toLocalDate().atTime(23, 59, 59);
-	    }
-	    
-	    List<Carona> all;
+		if (Boolean.TRUE.equals(filtroMinhasCaronas)) {
+			all = cr.findCaronasEnvolvidasUsuarioEntreDatas(usuarioLogado, filtroDataInicio, filtroDataFim);
+		} else {
+			all = cr.findByDataBetweenAndCanceladaFalseOrderByDataAsc(filtroDataInicio, filtroDataFim);
+		}
 
-	    if (Boolean.TRUE.equals(minhas)) {
-	        all = cr.findCaronasEnvolvidasUsuarioEntreDatas(usuarioLogado, dataInicio, dataFim);
-	    } else {
-	        all = cr.findByDataBetweenAndCanceladaFalseOrderByDataAsc(dataInicio, dataFim);
-	    }
+		List<CaronaItemListaDTO> caronas = CaronaItemListaDTO.converter(all, usuarioLogado);
 
-	    List<CaronaItemListaDTO> caronas = CaronaItemListaDTO.converter(all, usuarioLogado);
 
-	    ModelAndView md = new ModelAndView("caronas/lista"); 
-	    md.addObject("caronas", caronas);
-	    md.addObject("dataInicio", dataInicio);
-	    md.addObject("dataFim", dataFim);
-	    md.addObject("minhas", minhas); 
+		// Se for HTMX, retorna apenas o fragmento da listagem. Caso contrário, retorna
+		// a página inteira.
+		String viewName = isHtmx ? "caronas/lista :: #lista-caronas-container" : "caronas/lista";
 
-	    return md;
+		ModelAndView md = new ModelAndView(viewName);
+		md.addObject("caronas", caronas);
+		md.addObject("filtroDataInicio", filtroDataInicio);
+		md.addObject("filtroDataFim", filtroDataFim);
+		md.addObject("filtroMinhasCaronas", filtroMinhasCaronas);
+		
+		session.setAttribute("filtroDataInicio", filtroDataInicio);
+		session.setAttribute("filtroDataFim", filtroDataFim);
+		session.setAttribute("filtroMinhasCaronas", filtroMinhasCaronas);
+		
+		System.out.println("DEPOIS REQ ::=> " + filtroMinhasCaronas);
+		System.out.println("DEPOIS SES ::=> " + session.getAttribute("filtroMinhasCaronas"));
+		System.out.println("<=:::::::::::::::::::::::::::=>");
+
+		return md;
 	}
+	
+	@GetMapping("/limpar")
+	public String limparFiltros(HttpSession session) {
+		session.removeAttribute("filtroDataInicio");
+		session.removeAttribute("filtroDataFim");
+		session.removeAttribute("filtroMinhasCaronas");
 
-//	@GetMapping("/minhas")
-//	public ModelAndView listaMinhas(@AuthenticationPrincipal Usuario usuarioLogado) {
-//
-//		List<Carona> all = cr.findCaronasEnvolvidasUsuario(usuarioLogado);
-//
-//		List<CaronaItemListaDTO> caronas = CaronaItemListaDTO.gerarCaronaItemListaDTO(all, usuarioLogado);
-//
-//		ModelAndView md = new ModelAndView("caronas/lista-minhas");
-//		md.addObject("caronas", caronas);
-//		return md;
-//	}
+		return "redirect:/caronas";
+	}
 
 }

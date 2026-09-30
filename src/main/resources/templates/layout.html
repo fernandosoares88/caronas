@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+	xmlns:hx="http://www.w3.org/1999/xhtml">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,31 +12,54 @@
 	rel="stylesheet">
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<script
+	src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.11/dist/htmx.min.js"
+	integrity="sha384-2OatzQy1H+Zd/IIrjr1TcuDGqLXeHhbooAyJY1KdQMKnr4LZ22k31GBLdYKHmVjg"
+	crossorigin="anonymous"></script>
+
+<!-- Link para o Manifesto -->
+<link rel="manifest" th:href="@{/manifest.json}">
+<meta name="theme-color" content="#007bff">
+
+<!-- Script para Registrar o Service Worker -->
+<script>
+  if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+              .then(reg => console.log('Service Worker registrado com sucesso!', reg))
+              .catch(err => console.log('Falha ao registrar o Service Worker', err));
+      });
+  }
+</script>
 </head>
 <body class="bg-light">
 
 	<!-- Navbar -->
-	<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+	<nav
+		class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm sticky-top">
 		<div class="container">
-			<a class="navbar-brand fw-bold" href="/"><i
-				class="bi bi-car-front-fill"></i> Caronas</a>
+			<a class="navbar-brand fw-bold" href="/">
+				<i class="bi bi-car-front-fill"></i>
+				Caronas
+			</a>
 			<button class="navbar-toggler" type="button"
 				data-bs-toggle="collapse" data-bs-target="#navbarNav">
 				<span class="navbar-toggler-icon"></span>
 			</button>
 			<div class="collapse navbar-collapse" id="navbarNav">
 				<ul class="navbar-nav me-auto">
-					<li class="nav-item"><a class="nav-link" href="/caronas/novo">Oferecer
-							Carona</a></li>
+					<li class="nav-item">
+						<a class="nav-link" href="/caronas/novo">Oferecer Carona</a>
+					</li>
 				</ul>
 				<ul class="navbar-nav">
-<!-- 					<li class="nav-item"><a class="nav-link" -->
-<!-- 						href="/caronas/minhas">Minhas Reservas</a></li> -->
-					<li sec:authorize="!isAuthenticated()" class="nav-item"><a
-						class="btn btn-outline-light btn-sm ms-2" th:href="@{/login}">Entrar</a>
+					<li sec:authorize="!isAuthenticated()" class="nav-item">
+						<a class="btn btn-outline-light btn-sm ms-2" th:href="@{/login}">Entrar</a>
 					</li>
-					<li sec:authorize="isAuthenticated()" class="nav-item"><a
-						class="btn btn-outline-light btn-sm ms-2" th:href="@{/logout}">Sair</a></li>
+					<li sec:authorize="isAuthenticated()" class="nav-item">
+						<a class="btn btn-outline-light btn-sm ms-2" th:href="@{/logout}">Sair</a>
+					</li>
 				</ul>
 			</div>
 		</div>
@@ -45,8 +69,8 @@
 	<div class="container mt-3" th:if="${msg}">
 		<div class="alert alert-success alert-dismissible fade show shadow-sm"
 			role="alert">
-			<i class="bi bi-check-circle-fill me-2"></i> <span th:text="${msg}">Mensagem
-				do sistema</span>
+			<i class="bi bi-check-circle-fill me-2"></i>
+			<span th:text="${msg}">Mensagem do sistema</span>
 			<button type="button" class="btn-close" data-bs-dismiss="alert"
 				aria-label="Close"></button>
 		</div>
@@ -54,8 +78,8 @@
 	<div class="container mt-3" th:if="${msg2}">
 		<div class="alert alert-success alert-dismissible fade show shadow-sm"
 			role="alert">
-			<i class="bi bi-check-circle-fill me-2"></i> <span th:text="${msg2}">Mensagem
-				do sistema</span>
+			<i class="bi bi-check-circle-fill me-2"></i>
+			<span th:text="${msg2}">Mensagem do sistema</span>
 			<button type="button" class="btn-close" data-bs-dismiss="alert"
 				aria-label="Close"></button>
 		</div>
