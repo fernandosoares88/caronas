@@ -23,8 +23,7 @@ public class WebSecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests((requests) -> requests
-	            .requestMatchers("/", "/cadastro").permitAll()
-	            .anyRequest().authenticated())
+			.requestMatchers("/", "/manifest.json", "/sw.js", "/cadastro", "/css/**", "/js/**", "/imagens/**", "/webjars/**").permitAll()	            .anyRequest().authenticated())
 	        .formLogin((form) -> form
 	            .loginPage("/login")
 	            .defaultSuccessUrl("/caronas", true)
