@@ -18,54 +18,69 @@
 
 
 	<!-- Formulário de Filtro por Data -->
-	<div class="card shadow-sm mb-4">
-		<div class="card-body">
-			<form method="get" action="/caronas" class="row g-3 align-items-end"
-				hx-get="/caronas" hx-target="#lista-caronas-container"
-				hx-push-url="true" hx-trigger="change" hx-indicator="#indicator">
-				<div class="col-md-4">
-					<label for="filtroDataInicio" class="form-label fw-bold">Data
-						Inicial:</label> <input type="datetime-local" id="filtroDataInicio"
-						name="filtroDataInicio" class="form-control"
-						th:value="${filtroDataInicio != null ? #temporals.format(filtroDataInicio, 'yyyy-MM-dd''T''HH:mm') : ''}" />
-				</div>
+<div class="card shadow-sm mb-4">
+    <!-- Cabeçalho do Card com Título, Botão de Limpar e Botão de Colapsar -->
+    <div class="card-header d-flex justify-content-between align-items-center bg-white py-3">
+        <h5 class="mb-0 fw-bold text-secondary">
+            <i class="bi bi-filter me-2"></i>Filtros
+        </h5>
+        
+        <!-- Grupo de botões à direita (Limpar e Colapsar) -->
+        <div class="d-flex align-items-center gap-2">
+            <!-- Botão de Limpar Filtros -->
+            <a href="/caronas/limpar"
+                class="btn btn-sm btn-outline-secondary d-flex align-items-center justify-content-center px-2 py-1"
+                title="Restaurar filtros padrões">
+                <i class="bi bi-arrow-counterclockwise"></i>
+                <span class="d-none d-sm-inline ms-1">Limpar</span>
+            </a>
 
-				<div class="col-md-4">
-					<label for="filtroDataFim" class="form-label fw-bold">Data
-						Final:</label> <input type="datetime-local" id="filtroDataFim"
-						name="filtroDataFim" class="form-control"
-						th:value="${filtroDataFim != null ? #temporals.format(filtroDataFim, 'yyyy-MM-dd''T''HH:mm') : ''}" />
-				</div>
+            <!-- Botão de Colapsar -->
+            <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFiltros" aria-expanded="true" aria-controls="collapseFiltros" title="Minimizar/Expandir filtros">
+                <i class="bi bi-chevron-up"></i>
+            </button>
+        </div>
+    </div>
 
-				<div class="col-md-3 d-flex align-items-center">
-					<div class="form-check form-switch mt-4">
-						<!-- 						<input type="hidden" name="filtroMinhasCaronas" value="false" /> -->
-						<input class="form-check-input" type="checkbox"
-							id="filtroMinhasCaronas" name="filtroMinhasCaronas" value="true"
-							th:checked="${filtroMinhasCaronas != null and filtroMinhasCaronas}">
-						<label class="form-check-label fw-bold" for="filtroMinhasCaronas">Apenas
-							Minhas Reservas</label>
-					</div>
-				</div>
+    <!-- Corpo do card envolvido pela div colapsável -->
+    <div class="collapse show" id="collapseFiltros">
+        <div class="card-body">
+            <form method="get" action="/caronas" class="row g-3 align-items-end"
+                hx-get="/caronas" hx-target="#lista-caronas-container"
+                hx-push-url="true" hx-trigger="change" hx-indicator="#indicator">
+                
+                <div class="col-md-4">
+                    <label for="filtroDataInicio" class="form-label fw-bold">Data Inicial:</label> 
+                    <input type="datetime-local" id="filtroDataInicio"
+                        name="filtroDataInicio" class="form-control"
+                        th:value="${filtroDataInicio != null ? #temporals.format(filtroDataInicio, 'yyyy-MM-dd''T''HH:mm') : ''}" />
+                </div>
 
-				<div class="col-md-1 d-flex align-items-rigth gap-2">
-					<!-- 					<button type="submit" class="btn btn-primary w-100">Filtrar</button> -->
-					<a href="/caronas/limpar"
-						class="btn btn-outline-secondary d-flex align-items-center justify-content-center px-3"
-						title="Restaurar filtros padrões">
-						<i class="bi bi-arrow-counterclockwise"></i>
-					</a>
-				</div>
-			</form>
-		</div>
-	</div>
+                <div class="col-md-4">
+                    <label for="filtroDataFim" class="form-label fw-bold">Data Final:</label> 
+                    <input type="datetime-local" id="filtroDataFim"
+                        name="filtroDataFim" class="form-control"
+                        th:value="${filtroDataFim != null ? #temporals.format(filtroDataFim, 'yyyy-MM-dd''T''HH:mm') : ''}" />
+                </div>
 
+                <div class="col-md-4 d-flex align-items-center">
+                    <div class="form-check form-switch mt-4">
+                        <input class="form-check-input" type="checkbox"
+                            id="filtroMinhasCaronas" name="filtroMinhasCaronas" value="true"
+                            th:checked="${filtroMinhasCaronas != null and filtroMinhasCaronas}">
+                        <label class="form-check-label fw-bold" for="filtroMinhasCaronas">Apenas Minhas Reservas</label>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 	<!-- Últimas Caronas Disponíveis -->
 	<h3 class="mb-3">Próximas caronas</h3>
 
 	<div id="lista-caronas-container">
-<!-- 		<img id="indicator" class="htmx-indicator" width="150" src="/imagens/bars.svg" -->
-<!-- 		alt="Loading..." /> -->
+		<!-- 		<img id="indicator" class="htmx-indicator" width="150" src="/imagens/bars.svg" -->
+		<!-- 		alt="Loading..." /> -->
 		<div class="row">
 			<!-- Cartão 1: Carona Disponível (Destacado) -->
 			<div th:fragment="lista-caronas" th:each="c: ${caronas}"
@@ -112,9 +127,8 @@
 
 						<!-- Lista de Vagas / Passageiros -->
 						<ol class="small ps-3 mb-3 text-muted">
-							<li th:each="i : ${#numbers.sequence(0, c.vagas - 1)}">
-								<span
-									th:text="${i < c.passageiros.size() ? c.passageiros[i].nome : ''}"></span>
+							<li th:each="i : ${#numbers.sequence(0, c.vagas - 1)}"><span
+								th:text="${i < c.passageiros.size() ? c.passageiros[i].nome : ''}"></span>
 							</li>
 						</ol>
 
