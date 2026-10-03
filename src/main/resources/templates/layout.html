@@ -7,9 +7,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title th:text="${titulo} ?: 'Caronas'">Caronas</title>
 
-<link rel="apple-touch-icon" sizes="180x180" href="/imagens/icon-180.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/imagens/icon-32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/imagens/icon-16.png">
+<link rel="apple-touch-icon" sizes="180x180"
+	href="/imagens/icon-180.png">
+<link rel="icon" type="image/png" sizes="32x32"
+	href="/imagens/icon-32.png">
+<link rel="icon" type="image/png" sizes="16x16"
+	href="/imagens/icon-16.png">
 
 <!-- Bootstrap 5 CSS -->
 <link
@@ -37,6 +40,24 @@
       });
   }
 </script>
+<style>
+
+/* Esconde o indicador por padrão */
+.htmx-indicator {
+	display: none;
+}
+
+/* Quando qualquer formulário/elemento com requisição ativa é acionado, esconde o conteúdo de carregamento */
+.htmx-request .htmx-load-hide, .htmx-request.htmx-load-hide {
+	display: none !important;
+}
+
+/* Mostra o indicador genérico quando a requisição está ativa dentro de um wrapper */
+.htmx-request .htmx-indicator, .htmx-request.htmx-indicator {
+	display: block !important;
+}
+</style>
+
 </head>
 <body class="bg-light">
 
@@ -54,16 +75,15 @@
 			</button>
 			<div class="collapse navbar-collapse" id="navbarNav">
 				<ul class="navbar-nav me-auto">
-					<li class="nav-item">
-						<a class="nav-link" href="/caronas/novo">Oferecer Carona</a>
-					</li>
+					<li class="nav-item"><a class="nav-link" href="/caronas/novo">Oferecer
+							Carona</a></li>
 				</ul>
 				<ul class="navbar-nav">
-					<li sec:authorize="!isAuthenticated()" class="nav-item">
-						<a class="btn btn-outline-light btn-sm ms-2" th:href="@{/login}">Entrar</a>
+					<li sec:authorize="!isAuthenticated()" class="nav-item"><a
+							class="btn btn-outline-light btn-sm ms-2" th:href="@{/login}">Entrar</a>
 					</li>
-					<li sec:authorize="isAuthenticated()" class="nav-item">
-						<a class="btn btn-outline-light btn-sm ms-2" th:href="@{/logout}">Sair</a>
+					<li sec:authorize="isAuthenticated()" class="nav-item"><a
+							class="btn btn-outline-light btn-sm ms-2" th:href="@{/logout}">Sair</a>
 					</li>
 				</ul>
 			</div>
