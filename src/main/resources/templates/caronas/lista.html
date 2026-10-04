@@ -4,18 +4,19 @@
 	th:replace="~{layout :: html(template=~{::section})}">
 <section>
 
-<!-- Formulário de Filtro por Data -->
+	<!-- Formulário de Filtro por Data -->
 	<div class="card shadow-sm border-0 mb-3">
 		<!-- Cabeçalho do Card Clicável para Colapsar/Expandir (Mais compacto) -->
-		<div class="card-header d-flex justify-content-between align-items-center bg-white py-2 px-3 border-bottom border-light-subtle role-button"
-			 style="cursor: pointer;"
-			 data-bs-toggle="collapse" 
-			 data-bs-target="#collapseFiltros"
-			 aria-expanded="false" 
-			 aria-controls="collapseFiltros">
-			
-			<h5 class="mb-0 fw-semibold text-dark fs-6 user-select-none d-flex align-items-center gap-2">
-				<i class="bi bi-funnel text-dark"></i> Filtros
+		<div
+			class="card-header d-flex justify-content-between align-items-center bg-white py-2 px-3 border-bottom border-light-subtle role-button"
+			style="cursor: pointer;" data-bs-toggle="collapse"
+			data-bs-target="#collapseFiltros" aria-expanded="false"
+			aria-controls="collapseFiltros">
+
+			<h5
+				class="mb-0 fw-semibold text-dark fs-6 user-select-none d-flex align-items-center gap-2">
+				<i class="bi bi-funnel text-dark"></i>
+				Filtros
 			</h5>
 
 			<div class="d-flex align-items-center gap-2">
@@ -29,8 +30,9 @@
 				</a>
 
 				<!-- Ícone do Collapse -->
-				<button class="btn btn-sm btn-outline-secondary border-0 p-1 d-flex align-items-center justify-content-center" type="button"
-					title="Minimizar/Expandir filtros">
+				<button
+					class="btn btn-sm btn-outline-secondary border-0 p-1 d-flex align-items-center justify-content-center"
+					type="button" title="Minimizar/Expandir filtros">
 					<i id="iconeCollapseFiltros" class="bi bi-chevron-down fs-6"></i>
 				</button>
 			</div>
@@ -45,39 +47,45 @@
 
 					<!-- Data Inicial (Lado a lado no Mobile: col-6) -->
 					<div class="col-6 col-md-4">
-						<label for="filtroDataInicio" class="form-label x-small fw-semibold text-secondary mb-1">Data Inicial:</label> 
-						<input type="datetime-local" id="filtroDataInicio" name="filtroDataInicio" class="form-control form-control-sm border-light-subtle px-2"
+						<label for="filtroDataInicio"
+							class="form-label x-small fw-semibold text-secondary mb-1">Data
+							Inicial:</label> <input type="datetime-local" id="filtroDataInicio"
+							name="filtroDataInicio"
+							class="form-control form-control-sm border-light-subtle px-2"
 							th:value="${filtroDataInicio != null ? #temporals.format(filtroDataInicio, 'yyyy-MM-dd''T''HH:mm') : ''}" />
 					</div>
 
 					<!-- Data Final (Lado a lado no Mobile: col-6) -->
 					<div class="col-6 col-md-4">
-						<label for="filtroDataFim" class="form-label x-small fw-semibold text-secondary mb-1">Data Final:</label> 
-						<input type="datetime-local" id="filtroDataFim" name="filtroDataFim" class="form-control form-control-sm border-light-subtle px-2"
+						<label for="filtroDataFim"
+							class="form-label x-small fw-semibold text-secondary mb-1">Data
+							Final:</label> <input type="datetime-local" id="filtroDataFim"
+							name="filtroDataFim"
+							class="form-control form-control-sm border-light-subtle px-2"
 							th:value="${filtroDataFim != null ? #temporals.format(filtroDataFim, 'yyyy-MM-dd''T''HH:mm') : ''}" />
 					</div>
 
 					<!-- Checkbox Switch (Aproveita a linha no mobile) -->
 					<div class="col-12 col-md-4 pt-1 pt-md-0">
-						<div class="form-check form-switch m-0 d-flex align-items-center gap-2">
+						<div
+							class="form-check form-switch m-0 d-flex align-items-center gap-2">
 							<input class="form-check-input mt-0" type="checkbox"
 								id="filtroMinhasCaronas" name="filtroMinhasCaronas" value="true"
 								th:checked="${filtroMinhasCaronas != null and filtroMinhasCaronas}">
-							<label class="form-check-label small fw-semibold text-secondary" for="filtroMinhasCaronas">
-								Apenas Minhas Reservas
-							</label>
+							<label class="form-check-label small fw-semibold text-secondary"
+								for="filtroMinhasCaronas"> Apenas Minhas Reservas </label>
 						</div>
 					</div>
 				</form>
 			</div>
 		</div>
-	</div>	
+	</div>
 
 	<!-- Título e Botão de Adição -->
 	<div class="d-flex justify-content-between align-items-center mb-3">
 		<h5 class="mb-0 text-dark fw-bold fs-5">Próximas caronas</h5>
 		<a href="/caronas/novo"
-			class="btn btn-outline-primary border-0 fs-3 lh-1 p-2 d-flex align-items-center justify-content-center"
+			class="btn btn-outline-success border-0 fs-3 lh-1 p-2 d-flex align-items-center justify-content-center"
 			title="Oferecer uma Carona" aria-label="Oferecer uma Carona">
 			<i class="bi bi-plus-circle-fill"></i>
 		</a>
@@ -96,7 +104,10 @@
 					class="col-md-4 mb-3">
 
 					<!-- Cartão com Fundo Cinza quando Cancelada, Realizada ou Esgotada/Lotada -->
-					<div class="card h-100 shadow-sm border border-light-subtle"
+					<div
+						class="card h-100 shadow-sm border border-light-subtle card-carona-clicavel"
+						style="cursor: pointer;"
+						th:data-url="@{/caronas/{id}(id=${c.id})}"
 						th:classappend="${c.cancelada} or ${c.realizada} or (${c.esgotada} and !${c.estouNaCarona}) ? 'bg-secondary bg-opacity-10 opacity-75' : 
                             (${c.estouNaCarona} ? 'bg-success bg-opacity-10' : 'bg-white')">
 
@@ -143,7 +154,7 @@
 
 							<!-- Rodapé: Valor e Ações -->
 							<div
-								class="d-flex justify-content-between align-items-center mt-auto pt-2 border-top border-light-subtle">
+								class="d-flex justify-content-between align-items-center mt-auto pt-2 border-light-subtle">
 
 								<!-- Preço -->
 								<span class="fw-bold fs-6 text-dark"
@@ -151,7 +162,7 @@
 									th:text="${#numbers.formatCurrency(c.valor)}">R$ 35,00</span>
 
 								<!-- Ações Ativas -->
-								<div class="d-flex gap-1">
+								<div class="d-flex gap-1 stop-card-click">
 									<div
 										th:if="!${c.realizada} and ${c.data.isAfter(#temporals.createNow())}">
 										<!-- Sair -->
@@ -174,17 +185,17 @@
 											<button type="submit"
 												class="btn btn-sm btn-outline-success border-0 p-2 d-inline-flex align-items-center justify-content-center"
 												title="Reservar Vaga" aria-label="Reservar Vaga">
-												<i class="bi bi-plus-circle-fill fs-5"></i>
+												<i class="bi bi-box-arrow-in-right fs-5"></i>
 											</button>
 										</form>
 
 										<!-- Editar -->
-<!-- 										<a th:if="${c.souMotorista} and !${c.cancelada}" -->
-<!-- 											th:href="@{/caronas/{id}/editar(id=${c.id})}" -->
-<!-- 											class="btn btn-sm btn-outline-primary border-0 p-2 d-inline-flex align-items-center justify-content-center" -->
-<!-- 											title="Editar Carona" aria-label="Editar Carona"> -->
-<!-- 											<i class="bi bi-pencil-square fs-5"></i> -->
-<!-- 										</a> -->
+										<!-- 										<a th:if="${c.souMotorista} and !${c.cancelada}" -->
+										<!-- 											th:href="@{/caronas/{id}/editar(id=${c.id})}" -->
+										<!-- 											class="btn btn-sm btn-outline-primary border-0 p-2 d-inline-flex align-items-center justify-content-center" -->
+										<!-- 											title="Editar Carona" aria-label="Editar Carona"> -->
+										<!-- 											<i class="bi bi-pencil-square fs-5"></i> -->
+										<!-- 										</a> -->
 									</div>
 
 									<!-- Detalhes -->
@@ -223,6 +234,17 @@
 							icone.classList.remove('bi-chevron-down');
 							icone.classList.add('bi-chevron-up');
 						});
+			}
+		});
+
+		document.addEventListener("click", function(event) {
+			const card = event.target.closest('.card-carona-clicavel');
+
+			if (card && !event.target.closest('.stop-card-click')) {
+				const url = card.getAttribute('data-url');
+				if (url) {
+					window.location.href = url;
+				}
 			}
 		});
 	</script>
