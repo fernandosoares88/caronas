@@ -68,7 +68,6 @@
 			<a
 				class="navbar-brand fw-bold text-dark d-flex align-items-center gap-2"
 				href="/">
-				<i class="bi bi-car-front-fill fs-4 text-dark"></i>
 				<span>Caronas</span>
 			</a>
 			<button class="navbar-toggler border-0 p-2" type="button"
@@ -85,13 +84,14 @@
 
 					<!-- Usuário Autenticado -->
 					<li sec:authorize="isAuthenticated()"
-						class="nav-item d-flex align-items-center me-lg-2"><span
-						class="navbar-text small text-secondary fw-semibold"> <i
-								class="bi bi-person-circle me-1 text-primary"></i> <span>Bem-vindo,
-						</span> <span class="text-dark fw-bold"
+						class="nav-item d-flex align-items-center me-lg-2">
+						<span class="navbar-text small text-secondary fw-semibold"> 
+							<span>Olá,</span> 
+							<span class="text-dark fw-bold"
 							th:text="${#strings.arraySplit(#authentication.principal.nome, ' ')[0]}">Fernando</span>
-					</span></li>
-
+						</span>
+					</li>
+					
 					<li sec:authorize="isAuthenticated()" class="nav-item">
 						<form th:action="@{/logout}" method="post" class="d-inline">
 							<button type="submit"
