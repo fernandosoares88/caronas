@@ -18,6 +18,7 @@ public class CaronaItemListaDTO {
 	private LocalDateTime data;
 	private Integer vagas;
 	private Double valor;
+	private String pix;
 	private String observacoes;
 	private String motorista;
 	private String motoristaTelefone;
@@ -49,6 +50,7 @@ public class CaronaItemListaDTO {
 									.observacoes(carona.getObservacoes())
 									.vagas(carona.getVagas())
 									.valor(carona.getValor())
+									.pix(carona.getPix())
 									.passageiros(UsuarioDTO.converter(carona.getPassageiros()))
 									.build();
 

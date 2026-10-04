@@ -44,6 +44,7 @@ public class CaronasController {
 				caronaFormDTO.setObservacoes(carona.getObservacoes());
 				caronaFormDTO.setVagas(carona.getVagas());
 				caronaFormDTO.setValor(carona.getValor());
+				caronaFormDTO.setPix(carona.getPix());
 			}
 		}
 
