@@ -5,7 +5,7 @@
 <section>
 
 	<!-- Formulário de Filtro por Data -->
-	<div class="card shadow-sm border-0 mb-3">
+	<div class="card shadow-sm border border-secondary-subtle mb-3">
 		<!-- Cabeçalho do Card Clicável para Colapsar/Expandir (Mais compacto) -->
 		<div
 			class="card-header d-flex justify-content-between align-items-center bg-white py-2 px-3 border-bottom border-light-subtle role-button"
@@ -105,7 +105,7 @@
 
 					<!-- Cartão com Fundo Cinza quando Cancelada, Realizada ou Esgotada/Lotada -->
 					<div
-						class="card h-100 shadow-sm border border-light-subtle card-carona-clicavel"
+						class="card h-100 shadow-sm border border-secondary-subtle card-carona-clicavel"
 						style="cursor: pointer;"
 						th:data-url="@{/caronas/{id}(id=${c.id})}"
 						th:classappend="${c.cancelada} or ${c.realizada} or (${c.esgotada} and !${c.estouNaCarona}) ? 'bg-secondary bg-opacity-10 opacity-75' : 
