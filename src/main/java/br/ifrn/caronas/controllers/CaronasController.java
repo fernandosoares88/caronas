@@ -293,7 +293,6 @@ public class CaronasController {
 		
 		// Verifica se a requisição veio via HTMX
 		boolean isHtmx = "true".equals(request.getHeader("HX-Request"));
-		Boolean filtroMinhasCaronasSessao = (Boolean) session.getAttribute("filtroMinhasCaronas");
 		
 		//Tenta recuperar valores da sessão
 		if (filtroDataInicio == null)
