@@ -4,19 +4,18 @@
 	th:replace="~{layout :: html(template=~{::section})}">
 <section>
 
-	<!-- Formulário de Filtro por Data -->
-	<div class="card shadow-sm border-0 mb-4">
-		<!-- Cabeçalho do Card Clicável para Colapsar/Expandir -->
-		<div
-			class="card-header d-flex justify-content-between align-items-center bg-white py-3 border-bottom border-light-subtle role-button"
-			style="cursor: pointer;" data-bs-toggle="collapse"
-			data-bs-target="#collapseFiltros" aria-expanded="true"
-			aria-controls="collapseFiltros">
-
-			<h5
-				class="mb-0 fw-semibold text-dark fs-6 user-select-none d-flex align-items-center gap-2">
-				<i class="bi bi-funnel fs-5 text-dark"></i>
-				Filtros
+<!-- Formulário de Filtro por Data -->
+	<div class="card shadow-sm border-0 mb-3">
+		<!-- Cabeçalho do Card Clicável para Colapsar/Expandir (Mais compacto) -->
+		<div class="card-header d-flex justify-content-between align-items-center bg-white py-2 px-3 border-bottom border-light-subtle role-button"
+			 style="cursor: pointer;"
+			 data-bs-toggle="collapse" 
+			 data-bs-target="#collapseFiltros"
+			 aria-expanded="false" 
+			 aria-controls="collapseFiltros">
+			
+			<h5 class="mb-0 fw-semibold text-dark fs-6 user-select-none d-flex align-items-center gap-2">
+				<i class="bi bi-funnel text-dark"></i> Filtros
 			</h5>
 
 			<div class="d-flex align-items-center gap-2">
@@ -25,58 +24,54 @@
 					class="btn btn-sm btn-outline-secondary d-flex align-items-center justify-content-center border-0 px-2 py-1 fs-6"
 					title="Restaurar filtros padrões"
 					onclick="event.stopPropagation();">
-					<i class="bi bi-arrow-counterclockwise fs-5"></i>
+					<i class="bi bi-arrow-counterclockwise fs-6"></i>
 					<span class="d-none d-sm-inline ms-1 small">Limpar</span>
 				</a>
 
-				<!-- Ícone do Colapse -->
-				<button
-					class="btn btn-sm btn-outline-secondary border-0 p-2 d-flex align-items-center justify-content-center"
-					type="button" title="Minimizar/Expandir filtros">
-					<i id="iconeCollapseFiltros" class="bi bi-chevron-up fs-5"></i>
+				<!-- Ícone do Collapse -->
+				<button class="btn btn-sm btn-outline-secondary border-0 p-1 d-flex align-items-center justify-content-center" type="button"
+					title="Minimizar/Expandir filtros">
+					<i id="iconeCollapseFiltros" class="bi bi-chevron-down fs-6"></i>
 				</button>
 			</div>
 		</div>
 
-		<!-- Corpo do card colapsável -->
-		<div class="collapse show" id="collapseFiltros">
-			<div class="card-body">
-				<form method="get" action="/caronas" class="row g-3 align-items-end"
+		<!-- Corpo do card colapsável (Colapsado por padrão: classe 'collapse' sem 'show') -->
+		<div class="collapse" id="collapseFiltros">
+			<div class="card-body p-3">
+				<form method="get" action="/caronas" class="row g-2 align-items-end"
 					hx-get="/caronas" hx-target="#lista-caronas-container"
 					hx-push-url="true" hx-trigger="change" hx-indicator="#indicator">
 
-					<div class="col-md-4">
-						<label for="filtroDataInicio"
-							class="form-label small fw-semibold text-secondary">Data
-							Inicial:</label> <input type="datetime-local" id="filtroDataInicio"
-							name="filtroDataInicio"
-							class="form-control form-control-sm border-light-subtle"
+					<!-- Data Inicial (Lado a lado no Mobile: col-6) -->
+					<div class="col-6 col-md-4">
+						<label for="filtroDataInicio" class="form-label x-small fw-semibold text-secondary mb-1">Data Inicial:</label> 
+						<input type="datetime-local" id="filtroDataInicio" name="filtroDataInicio" class="form-control form-control-sm border-light-subtle px-2"
 							th:value="${filtroDataInicio != null ? #temporals.format(filtroDataInicio, 'yyyy-MM-dd''T''HH:mm') : ''}" />
 					</div>
 
-					<div class="col-md-4">
-						<label for="filtroDataFim"
-							class="form-label small fw-semibold text-secondary">Data
-							Final:</label> <input type="datetime-local" id="filtroDataFim"
-							name="filtroDataFim"
-							class="form-control form-control-sm border-light-subtle"
+					<!-- Data Final (Lado a lado no Mobile: col-6) -->
+					<div class="col-6 col-md-4">
+						<label for="filtroDataFim" class="form-label x-small fw-semibold text-secondary mb-1">Data Final:</label> 
+						<input type="datetime-local" id="filtroDataFim" name="filtroDataFim" class="form-control form-control-sm border-light-subtle px-2"
 							th:value="${filtroDataFim != null ? #temporals.format(filtroDataFim, 'yyyy-MM-dd''T''HH:mm') : ''}" />
 					</div>
 
-					<div class="col-md-4 d-flex align-items-center">
-						<div class="form-check form-switch mt-3">
-							<input class="form-check-input" type="checkbox"
+					<!-- Checkbox Switch (Aproveita a linha no mobile) -->
+					<div class="col-12 col-md-4 pt-1 pt-md-0">
+						<div class="form-check form-switch m-0 d-flex align-items-center gap-2">
+							<input class="form-check-input mt-0" type="checkbox"
 								id="filtroMinhasCaronas" name="filtroMinhasCaronas" value="true"
 								th:checked="${filtroMinhasCaronas != null and filtroMinhasCaronas}">
-							<label
-								class="form-check-label small fw-semibold text-secondary ms-1"
-								for="filtroMinhasCaronas"> Apenas Minhas Reservas </label>
+							<label class="form-check-label small fw-semibold text-secondary" for="filtroMinhasCaronas">
+								Apenas Minhas Reservas
+							</label>
 						</div>
 					</div>
 				</form>
 			</div>
 		</div>
-	</div>
+	</div>	
 
 	<!-- Título e Botão de Adição -->
 	<div class="d-flex justify-content-between align-items-center mb-3">
