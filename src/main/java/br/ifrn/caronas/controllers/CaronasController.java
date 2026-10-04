@@ -307,7 +307,7 @@ public class CaronasController {
 			
 		// Cria valores padrões caso os filtros venham nulos
 		if (filtroDataInicio == null)
-			filtroDataInicio = LocalDateTime.now().minusHours(1);
+			filtroDataInicio = LocalDateTime.now().toLocalDate().atTime(0, 0, 0);
 
 		if (filtroDataFim == null) {
 			LocalDateTime agora = LocalDateTime.now();
