@@ -77,17 +77,22 @@
 			</button>
 			<div class="collapse navbar-collapse" id="navbarNav">
 				<ul class="navbar-nav me-auto">
-<!-- 					<li class="nav-item"><a -->
-<!-- 							class="nav-link text-secondary fw-medium small d-flex align-items-center gap-1 py-2" -->
-<!-- 							href="/caronas/novo"> -->
-<!-- 							<i class="bi bi-plus-circle fs-5"></i> -->
-<!-- 							<span>Oferecer Carona</span> -->
-<!-- 						</a></li> -->
 				</ul>
-				<ul class="navbar-nav align-items-lg-center">
+				<ul class="navbar-nav align-items-lg-center gap-2 gap-lg-0">
 					<li sec:authorize="!isAuthenticated()" class="nav-item"><a
 							class="btn btn-outline-primary btn-sm border-0 fw-semibold px-3 ms-lg-2 py-2"
 							th:href="@{/login}">Entrar</a></li>
+
+					<!-- Usuário Autenticado -->
+					<li sec:authorize="isAuthenticated()" class="nav-item d-flex align-items-center me-lg-2">
+						<span class="navbar-text small text-secondary fw-semibold">
+							<span>Olá, </span>
+							<!-- Extrai e exibe apenas o primeiro nome -->
+							<!-- Extrai e exibe apenas o primeiro nome usando a propriedade 'nome' do Usuário -->
+<span class="text-dark fw-bold" th:text="${#strings.arraySplit(#authentication.principal.nome, ' ')[0]}">Fernando</span>
+						</span>
+					</li>
+
 					<li sec:authorize="isAuthenticated()" class="nav-item">
 						<form th:action="@{/logout}" method="post" class="d-inline">
 							<button type="submit"
