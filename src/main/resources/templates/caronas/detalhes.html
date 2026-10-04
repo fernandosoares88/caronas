@@ -3,115 +3,201 @@
 	th:replace="~{layout :: html(template=~{::section})}">
 <section>
 	<div class="row justify-content-center">
-		<div class="col-md-8">
+		<div class="col-md-8 col-lg-6">
 
-			<!-- Alerta de Carona Cancelada (Exibido apenas se carona.cancelada for true) -->
+			<!-- Alerta de Carona Cancelada -->
 			<div th:if="${carona.cancelada}"
-				class="alert alert-danger text-center shadow-sm mb-4" role="alert">
-				<h4 class="alert-heading mb-1">⚠️ Esta carona foi cancelada</h4>
-				<p class="mb-0">Não é mais possível realizar reservas ou
-					interagir com esta viagem.</p>
+				class="alert alert-danger bg-danger-subtle text-danger-emphasis border-danger-subtle text-center shadow-sm mb-3 rounded-3"
+				role="alert">
+				<div class="fw-semibold mb-1">
+					<i class="bi bi-exclamation-triangle-fill me-1"></i>
+					Esta carona foi cancelada
+				</div>
+				<small class="d-block text-secondary">Não é mais possível
+					realizar reservas ou interagir com esta viagem.</small>
 			</div>
 
-			<div class="card shadow-sm p-4"
-				th:classappend="${carona.cancelada} ? 'border-danger' : ''">
-				<div class="d-flex justify-content-between align-items-center mb-3">
-					<h2 class="text-primary mb-0" th:text="${carona.direcao}">Origem
-						➔ Destino</h2>
-					<span class="fs-4 fw-bold text-success"
-						th:text="${#numbers.formatCurrency(carona.valor)}">R$ 30,00</span>
-				</div>
-				<hr>
+			<div class="card shadow-sm border border-secondary-subtle"
+				th:classappend="${carona.cancelada} ? 'border-danger-subtle' : ''">
+				<div class="card-body p-4">
 
-				<div class="row mb-4">
-					<div class="col-md-6">
-						<p class="mb-1 text-muted">Data e Horário</p>
-						<h5
-							th:text="${#temporals.format(carona.data, 'dd/MM/yyyy HH:mm')}">20/06/2026
-							07:30</h5>
+					<!-- Destino e Valor -->
+					<div class="d-flex justify-content-between align-items-center mb-3">
+						<div class="d-flex align-items-center gap-2">
+							<i class="bi bi-geo-alt-fill text-secondary fs-5"></i>
+							<h5 class="fw-bold text-dark mb-0" th:text="${carona.direcao}">Natal
+								➔ Lajes</h5>
+						</div>
+						<span class="fs-5 fw-bold text-success"
+							th:text="${#numbers.formatCurrency(carona.valor)}">R$
+							30,00</span>
 					</div>
-					<div class="col-md-6">
-						<p class="mb-1 text-muted">Vagas Disponíveis</p>
-						<h5 th:text="${carona.vagas - carona.passageiros.size}">2
-							vagas</h5>
+
+					<!-- Informações Rápidas -->
+					<div class="row g-2 mb-3">
+						<div class="col-6">
+							<div class="p-3 bg-light rounded border border-light-subtle">
+								<span
+									class="form-label small fw-semibold text-secondary d-block mb-1">Data
+									e Horário</span>
+								<div class="fw-medium text-dark small">
+									<i class="bi bi-calendar3 me-1 text-secondary"></i>
+									<span
+										th:text="${#temporals.format(carona.data, 'dd/MM/yyyy HH:mm')}">20/06/2026
+										07:30</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-6">
+							<div class="p-3 bg-light rounded border border-light-subtle">
+								<span
+									class="form-label small fw-semibold text-secondary d-block mb-1">Vagas
+									Disponíveis</span>
+								<div class="fw-medium text-dark small">
+									<i class="bi bi-people me-1 text-secondary"></i>
+									<span
+										th:text="${carona.vagas - carona.passageiros.size} + ' vaga(s)'">2
+										vagas</span>
+								</div>
+							</div>
+						</div>
 					</div>
-				</div>
 
-				<div class="card bg-light border-0 p-3 mb-4">
-					<h5 class="mb-2">
-						<i class="bi bi-person-circle"></i> <span>Motorista</span>
-					</h5>
-					<p class="mb-1">
-						<strong>Nome:</strong> <span th:text="${carona.motorista}">Carlos
-							Souza</span>
-					</p>
-					<p class="mb-0 d-inline-flex align-items-center gap-2">
-						<strong>Contato:</strong> <span
-							th:text="${carona.motoristaTelefone}">(11) 98888-7777</span>
+					<!-- Motorista -->
+					<div
+						class="p-3 bg-light-subtle rounded border border-light-subtle mb-3">
+						<span
+							class="form-label small fw-semibold text-secondary d-block mb-2">
+							<i class="bi bi-person-fill me-1"></i> Motorista
+						</span>
+						<div class="d-flex justify-content-between align-items-center">
+							<div>
+								<span class="fw-semibold text-dark d-block"
+									th:text="${carona.motorista}">Carlos Souza</span> <small
+									class="text-secondary" th:text="${carona.motoristaTelefone}">(84)
+									98888-7777</small>
+							</div>
 
-						<!-- Botão com apenas o ícone do WhatsApp, exibido apenas se o passageiro estiver na carona -->
-						<a
-							th:if="${carona.estouNaCarona} and !${carona.souMotorista} and !${carona.cancelada}"
-							th:href="@{https://api.whatsapp.com/send(phone=${'55' + carona.motoristaTelefone.replaceAll('[^0-9]', '')}, text=${'Olá, coloquei meu nome na carona para o dia ' + #temporals.format(carona.data, 'dd/MM/yyyy') + ' às ' + #temporals.format(carona.data, 'HH:mm') + '.'})}"
-							target="_blank" class="btn btn-success btn-sm p-1 lh-1"
-							title="Avisar no WhatsApp"> <i class="bi bi-whatsapp fs-6"></i>
-						</a>
-					</p>
-
-				</div>
-
-				<div class="card bg-light border-0 p-3 mb-4">
-					<h5 class="mb-2">
-						<span>Passageiros confirmados:</span>
-					</h5>
-					<ol>
-						<li th:each="p: ${carona.passageiros}" class="mb-1">
-							<!-- Nome do passageiro --> <span th:text="${p.nome}">Nome
-								do Passageiro</span> <!-- Botão do WhatsApp para o motorista enviar mensagem ao passageiro (Exibido apenas se o usuário for o motorista e a carona não estiver cancelada) -->
-							<a th:if="${carona.souMotorista} and !${carona.cancelada}"
-							th:href="@{https://api.whatsapp.com/send(phone=${'55' + p.telefone.replaceAll('[^0-9]', '')}, text=${'Olá, passando para confirmar sua vaga na minha carona para o dia ' + #temporals.format(carona.data, 'dd/MM/yyyy') + ' às ' + #temporals.format(carona.data, 'HH:mm') + '.'})}"
-							target="_blank" class="btn btn-success btn-sm p-1 lh-1 ms-2"
-							th:title="'Confirmar carona com ' + ${p.nome}"> <i
-								class="bi bi-whatsapp fs-6"></i>
+							<!-- WhatsApp para Passageiro -->
+							<a
+								th:if="${carona.estouNaCarona} and !${carona.souMotorista} and !${carona.cancelada}"
+								th:href="@{https://api.whatsapp.com/send(phone=${'55' + carona.motoristaTelefone.replaceAll('[^0-9]', '')}, text=${'Olá, coloquei meu nome na carona para o dia ' + #temporals.format(carona.data, 'dd/MM/yyyy') + ' às ' + #temporals.format(carona.data, 'HH:mm') + '.'})}"
+								target="_blank"
+								class="btn btn-outline-success btn-sm fw-semibold d-flex align-items-center gap-1"
+								title="Avisar no WhatsApp">
+								<i class="bi bi-whatsapp"></i>
+								<span>Contato</span>
 							</a>
-						</li>
-					</ol>
-				</div>
+						</div>
+					</div>
+					
+					<!-- Chave PIX do Motorista -->
+					<div th:if="${carona.pix != null and !carona.pix.isBlank()}"
+						class="p-3 bg-light-subtle rounded border border-light-subtle mb-3">
+						<span class="form-label small fw-semibold text-secondary d-block mb-2">
+							<i class="bi bi-qr-code me-1"></i> Chave PIX (Pagamento)
+						</span>
+						<div class="d-flex justify-content-between align-items-center gap-2">
+							<code class="text-dark bg-light px-2 py-1 rounded border border-light-subtle fw-semibold text-break small flex-grow-1"
+								  id="chavePixTexto" th:text="${carona.pix}">chave-pix-aqui</code>
+							
+							<button type="button" class="btn btn-outline-primary btn-sm fw-semibold d-inline-flex align-items-center gap-1"
+									onclick="copiarChavePix(this)">
+								<i class="bi bi-clipboard"></i>
+								<span>Copiar</span>
+							</button>
+						</div>
+					</div>
 
-				<div class="mb-4">
-					<h5 class="mb-2">Observações do Motorista</h5>
-					<p class="text-muted" th:text="${carona.observacoes}">Regras da
-						viagem...</p>
-				</div>
+					<!-- Passageiros Confirmados -->
+					<div
+						class="p-3 bg-light-subtle rounded border border-light-subtle mb-3">
+						<span
+							class="form-label small fw-semibold text-secondary d-block mb-2">
+							<i class="bi bi-people-fill me-1"></i> Passageiros Confirmados
+						</span>
 
-				<!-- Botões de Ação (Apenas exibidos se a carona NÃO estiver cancelada) -->
-				<div class="d-flex gap-2 justify-content-end"
-					th:if="!${carona.cancelada} and ${carona.data.isAfter(#temporals.createNow())}">
-					<!-- Botão Reservar Vaga -->
-					<form th:if="!${carona.estouNaCarona} and !${carona.esgotada}"
-						th:action="@{/caronas/{id}/reservar(id=${carona.id})}"
-						method="post">
-						<button type="submit" class="btn btn-outline-success btn-sm">Reservar
-							Vaga</button>
-					</form>
+						<div th:if="${#lists.isEmpty(carona.passageiros)}"
+							class="small text-secondary italic">Nenhum passageiro
+							reservou ainda.</div>
 
-					<!-- Botão Sair da Carona -->
-					<form th:if="${carona.estouNaCarona} and !${carona.souMotorista}"
-						th:action="@{/caronas/{id}/sair(id=${carona.id})}" method="post">
-						<button type="submit" class="btn btn-outline-danger btn-sm">Sair
-							da Carona</button>
-					</form>
+						<ol th:if="${!#lists.isEmpty(carona.passageiros)}"
+							class="mb-0 ps-3">
+							<li th:each="p: ${carona.passageiros}" class="py-1">
+								<div class="d-flex justify-content-between align-items-center">
+									<span class="small fw-medium text-dark" th:text="${p.nome}">Nome
+										do Passageiro</span>
 
-					<!-- Botão Editar a Carona -->
-					<a th:if="${carona.souMotorista}"
-						th:href="@{/caronas/{id}/editar(id=${carona.id})}"
-						class="btn btn-outline-primary btn-sm">Editar</a>
+									<!-- WhatsApp do Motorista para Passageiro -->
+									<a th:if="${carona.souMotorista} and !${carona.cancelada}"
+										th:href="@{https://api.whatsapp.com/send(phone=${'55' + p.telefone.replaceAll('[^0-9]', '')}, text=${'Olá, passando para confirmar sua vaga na minha carona para o dia ' + #temporals.format(carona.data, 'dd/MM/yyyy') + ' às ' + #temporals.format(carona.data, 'HH:mm') + '.'})}"
+										target="_blank" class="btn btn-success btn-sm px-2 py-1"
+										th:title="'Confirmar carona com ' + ${p.nome}">
+										<i class="bi bi-whatsapp fs-6"></i>
+									</a>
+								</div>
+							</li>
+						</ol>
+					</div>
 
-					<!-- Botão Cancelar Carona (Aciona o Modal) -->
-					<button th:if="${carona.souMotorista}" type="button"
-						class="btn btn-outline-danger btn-sm" data-bs-toggle="modal"
-						data-bs-target="#confirmarCancelamentoModal">Cancelar
-						Carona</button>
+					<!-- Observações -->
+					<div
+						class="mb-4">
+						<span
+							class="form-label small fw-semibold text-secondary d-block mb-1">
+							<i class="bi bi-info-circle me-1"></i> Observações / Regras
+						</span>
+						<p
+							class="small text-secondary mb-0 bg-light p-3 rounded border border-light-subtle"
+							th:text="${carona.observacoes}">Regras da viagem...</p>
+					</div>
+
+					<!-- Botões de Ação -->
+					<div
+						class="d-flex gap-2 justify-content-end align-items-stretch pt-2">
+						<!-- Botão Reservar Vaga -->
+						<form
+							th:if="!${carona.cancelada} and ${carona.data.isAfter(#temporals.createNow())} and !${carona.estouNaCarona} and !${carona.esgotada}"
+							th:action="@{/caronas/{id}/reservar(id=${carona.id})}"
+							method="post" class="flex-grow-1">
+							<button type="submit"
+								class="btn btn-primary w-100 py-2 fw-semibold d-inline-flex align-items-center justify-content-center gap-2 shadow-sm">
+								Reservar Vaga</button>
+						</form>
+
+						<!-- Botão Sair da Carona -->
+						<form
+							th:if="!${carona.cancelada} and ${carona.data.isAfter(#temporals.createNow())} and ${carona.estouNaCarona} and !${carona.souMotorista}"
+							th:action="@{/caronas/{id}/sair(id=${carona.id})}" method="post"
+							class="flex-grow-1">
+							<button type="submit"
+								class="btn btn-outline-danger w-100 py-2 fw-semibold d-inline-flex align-items-center justify-content-center gap-2">
+								Sair da Carona</button>
+						</form>
+
+						<!-- Botão Editar a Carona -->
+						<a
+							th:if="!${carona.cancelada} and ${carona.data.isAfter(#temporals.createNow())} and ${carona.souMotorista}"
+							th:href="@{/caronas/{id}/editar(id=${carona.id})}"
+							class="btn btn-outline-primary py-2 px-3 fw-semibold d-inline-flex align-items-center justify-content-center gap-1">
+							Editar </a>
+
+						<!-- Botão Cancelar Carona -->
+						<button
+							th:if="!${carona.cancelada} and ${carona.data.isAfter(#temporals.createNow())} and ${carona.souMotorista}"
+							type="button"
+							class="btn btn-outline-danger py-2 px-3 fw-semibold d-inline-flex align-items-center justify-content-center gap-1"
+							data-bs-toggle="modal"
+							data-bs-target="#confirmarCancelamentoModal">Cancelar</button>
+
+						<!-- Botão Voltar -->
+						<a href="/caronas"
+							class="btn btn-outline-secondary px-3 py-2 fw-semibold d-inline-flex align-items-center justify-content-center gap-1">
+							<i class="bi bi-arrow-left"></i>
+							<span>Voltar</span>
+						</a>
+					</div>
+
 				</div>
 			</div>
 		</div>
@@ -120,30 +206,59 @@
 	<!-- Modal de Confirmação de Cancelamento -->
 	<div class="modal fade" id="confirmarCancelamentoModal" tabindex="-1"
 		aria-labelledby="modalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title text-danger" id="modalLabel">⚠️
-						Confirmar Cancelamento</h5>
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content border-0 shadow">
+				<div class="modal-header border-bottom-0 pb-0">
+					<h5 class="modal-title fw-semibold text-danger fs-6"
+						id="modalLabel">
+						<i class="bi bi-exclamation-triangle-fill me-1"></i>
+						Confirmar Cancelamento
+					</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"
 						aria-label="Fechar"></button>
 				</div>
-				<div class="modal-body">
-					<p>Tem certeza absoluta que deseja cancelar esta carona?</p>
-					<p class="text-danger fw-bold mb-0">Esta operação não é
-						reversível!</p>
+				<div class="modal-body py-3">
+					<p class="small text-secondary mb-1">Tem certeza que deseja
+						cancelar esta carona?</p>
+					<small class="text-danger fw-semibold d-block">Esta ação
+						não poderá ser desfeita.</small>
 				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary btn-sm"
-						data-bs-dismiss="modal">Voltar</button>
+				<div class="modal-footer border-top-0 pt-0 gap-2">
+					<button type="button"
+						class="btn btn-light btn-sm fw-semibold border border-light-subtle px-3"
+						data-bs-dismiss="modal">Manter Carona</button>
 					<form th:action="@{/caronas/{id}/cancelar(id=${carona.id})}"
 						method="post">
-						<button type="submit" class="btn btn-danger btn-sm">Sim,
-							cancelar carona</button>
+						<button type="submit"
+							class="btn btn-danger btn-sm fw-semibold px-3">Sim,
+							Cancelar</button>
 					</form>
 				</div>
 			</div>
 		</div>
 	</div>
+	
+	<script>
+	function copiarChavePix(btn) {
+		const chavePix = document.getElementById('chavePixTexto').innerText.trim();
+		
+		navigator.clipboard.writeText(chavePix).then(() => {
+			const icon = btn.querySelector('i');
+			const span = btn.querySelector('span');
+			
+			btn.classList.replace('btn-outline-primary', 'btn-success');
+			icon.classList.replace('bi-clipboard', 'bi-check-lg');
+			span.innerText = 'Copiado!';
+			
+			setTimeout(() => {
+				btn.classList.replace('btn-success', 'btn-outline-primary');
+				icon.classList.replace('bi-check-lg', 'bi-clipboard');
+				span.innerText = 'Copiar';
+			}, 2000);
+		}).catch(err => {
+			console.error('Erro ao copiar chave PIX: ', err);
+		});
+	}
+	</script>
 </section>
 </html>

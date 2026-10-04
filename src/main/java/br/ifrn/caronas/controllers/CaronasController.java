@@ -44,6 +44,7 @@ public class CaronasController {
 				caronaFormDTO.setObservacoes(carona.getObservacoes());
 				caronaFormDTO.setVagas(carona.getVagas());
 				caronaFormDTO.setValor(carona.getValor());
+				caronaFormDTO.setPix(carona.getPix());
 			}
 		}
 
@@ -65,7 +66,6 @@ public class CaronasController {
 		if (result.hasErrors()) {
 			return form(caronaFormDTO, usuarioLogado);
 		}
-		System.out.println(caronaFormDTO);
 
 		// Nova carona
 		if (caronaFormDTO.getId() == null || caronaFormDTO.getId() == 0) {
@@ -105,6 +105,7 @@ public class CaronasController {
 			carona.setDirecao(caronaFormDTO.getDirecao());
 			carona.setData(caronaFormDTO.getData());
 			carona.setValor(caronaFormDTO.getValor());
+			carona.setPix(caronaFormDTO.getPix());
 			carona.setObservacoes(caronaFormDTO.getObservacoes());
 
 			cr.save(carona);
@@ -138,8 +139,6 @@ public class CaronasController {
 
 		md.setViewName("caronas/form");
 		md.addObject("caronaFormDTO", CaronaFormDTO.converter(carona));
-		System.out.println(carona);
-		System.out.println(CaronaFormDTO.converter(carona));
 
 		return md;
 	}
@@ -294,11 +293,7 @@ public class CaronasController {
 		
 		// Verifica se a requisição veio via HTMX
 		boolean isHtmx = "true".equals(request.getHeader("HX-Request"));
-		Boolean filtroMinhasCaronasSessao = (Boolean) session.getAttribute("filtroMinhasCaronas");
 		
-		System.out.println("<=:::::::::::::::::::::::::::=>");
-		System.out.println("ANTES REQ ::=> " + filtroMinhasCaronas);
-		System.out.println("ANTES SES ::=> " + filtroMinhasCaronasSessao);
 		//Tenta recuperar valores da sessão
 		if (filtroDataInicio == null)
 			filtroDataInicio = (LocalDateTime) session.getAttribute("filtroDataInicio");
@@ -309,11 +304,10 @@ public class CaronasController {
 		else if(filtroMinhasCaronas == null)
 			filtroMinhasCaronas = (Boolean) session.getAttribute("filtroMinhasCaronas");
 		
-//		System.out.println("DEPOIS ::=> " + filtroMinhasCaronas);
 			
 		// Cria valores padrões caso os filtros venham nulos
 		if (filtroDataInicio == null)
-			filtroDataInicio = LocalDateTime.now().minusHours(1);
+			filtroDataInicio = LocalDateTime.now().toLocalDate().atTime(0, 0, 0);
 
 		if (filtroDataFim == null) {
 			LocalDateTime agora = LocalDateTime.now();
@@ -326,8 +320,6 @@ public class CaronasController {
 			filtroDataFim = filtroDataFim.toLocalDate().atTime(23, 59, 59);
 		}
 		
-//		if(filtroMinhasCaronas == null)
-//			filtroMinhasCaronas = Boolean.FALSE;
 
 		List<Carona> all;
 
@@ -354,10 +346,6 @@ public class CaronasController {
 		session.setAttribute("filtroDataFim", filtroDataFim);
 		session.setAttribute("filtroMinhasCaronas", filtroMinhasCaronas);
 		
-		System.out.println("DEPOIS REQ ::=> " + filtroMinhasCaronas);
-		System.out.println("DEPOIS SES ::=> " + session.getAttribute("filtroMinhasCaronas"));
-		System.out.println("<=:::::::::::::::::::::::::::=>");
-
 		return md;
 	}
 	

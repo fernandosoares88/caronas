@@ -2,52 +2,99 @@
 <html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: html(template=~{::section})}">
 <section>
     <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow-sm p-4">
-                <h2 class="mb-4 text-center" 
-                    th:text="${caronaFormDTO.id != null} ? 'Editar carona' : 'Oferecer carona'">
-                    Oferecer Carona
-                </h2>
-                
-                <form th:action="@{/caronas}" method="post" th:object="${caronaFormDTO}">
+        <div class="col-md-8 col-lg-6">
+            
+            <div class="card shadow-sm border border-secondary-subtle">
+                <div class="card-body p-4">
                     
-                    <input type="hidden" th:field="*{id}" />
-                    
-                    <div class="mb-3">
-                        <label for="rota" class="form-label">Rota</label>
-                        <select class="form-select" th:field="*{direcao}" required>
-                            <option value="" disabled selected>Selecione a rota</option>
-                            <option value="Natal ➔ Lajes">Natal ➔ Lajes</option>
-                            <option value="Lajes ➔ Natal">Lajes ➔ Natal</option>
-                        </select>
-                    </div>
+                    <form th:action="@{/caronas}" method="post" th:object="${caronaFormDTO}">
+                        <input type="hidden" th:field="*{id}" />
+                        
+                        <div class="row g-3">
+                            <!-- Rota -->
+                            <div class="col-12">
+                                <label for="direcao" class="form-label small fw-semibold text-secondary">Rota</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-secondary border-light-subtle">
+                                        <i class="bi bi-geo-alt-fill fs-6"></i>
+                                    </span>
+                                    <select class="form-select border-light-subtle" th:field="*{direcao}" required>
+                                        <option value="" disabled selected>Selecione a rota</option>
+                                        <option value="Natal ➔ Lajes">Natal ➔ Lajes</option>
+                                        <option value="Lajes ➔ Natal">Lajes ➔ Natal</option>
+                                    </select>
+                                </div>
+                            </div>
 
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="dataHora" class="form-label">Data e Horário de Partida</label>
-                            <input type="datetime-local" class="form-control" th:field="*{data}" required>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="vagasDisponiveis" class="form-label">Vagas</label>
-                            <input type="number" class="form-control" th:field="*{vagas}" min="1" max="6" required>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="valor" class="form-label">Valor por Vaga (R$)</label>
-                            <input type="number" step="0.01" class="form-control" th:field="*{valor}" required placeholder="0.00">
-                        </div>
-                    </div>
+                            <!-- Data e Horário -->
+                            <div class="col-12 col-md-6">
+                                <label for="data" class="form-label small fw-semibold text-secondary">Data e Horário</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-secondary border-light-subtle">
+                                        <i class="bi bi-calendar3 fs-6"></i>
+                                    </span>
+                                    <input type="datetime-local" class="form-control border-light-subtle" th:field="*{data}" required>
+                                </div>
+                            </div>
 
-                    <div class="mb-3">
-                        <label for="observacoes" class="form-label">Observações / Regras</label>
-                        <textarea class="form-control" th:field="*{observacoes}" rows="3" placeholder="Ex: Não fumar, aceito animais de pequeno porte, malas pequenas..."></textarea>
-                    </div>
+                            <!-- Vagas -->
+                            <div class="col-6 col-md-3">
+                                <label for="vagas" class="form-label small fw-semibold text-secondary">Vagas</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-secondary border-light-subtle px-2">
+                                        <i class="bi bi-people-fill fs-6"></i>
+                                    </span>
+                                    <input type="number" class="form-control border-light-subtle" th:field="*{vagas}" min="1" max="6" required>
+                                </div>
+                            </div>
 
-                    <button type="submit" class="btn btn-primary w-100 py-2 fw-bold" 
-                            th:text="${caronaFormDTO.id != null} ? 'Salvar Alterações' : 'Publicar Carona'">
-                        Publicar Carona
-                    </button>
-                </form>
+                            <!-- Valor por Vaga -->
+                            <div class="col-6 col-md-3">
+                                <label for="valor" class="form-label small fw-semibold text-secondary">Valor (R$)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-secondary border-light-subtle px-2">
+                                        <i class="bi bi-currency-dollar fs-6"></i>
+                                    </span>
+                                    <input type="number" step="0.01" class="form-control border-light-subtle" th:field="*{valor}" required placeholder="0.00">
+                                </div>
+                            </div>
+                            
+                            <!-- Chave PIX -->
+                            <div class="col-12">
+                                <label for="pix" class="form-label small fw-semibold text-secondary">Chave PIX (para pagamento)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-secondary border-light-subtle">
+                                        <i class="bi bi-qr-code fs-6"></i>
+                                    </span>
+                                    <input type="text" class="form-control border-light-subtle" th:field="*{pix}" 
+                                           placeholder="Ex: CPF, Telefone, E-mail ou Chave Aleatória">
+                                </div>
+                            </div>
+
+                            <!-- Observações -->
+                            <div class="col-12">
+                                <label for="observacoes" class="form-label small fw-semibold text-secondary">Observações / Regras</label>
+                                <textarea class="form-control border-light-subtle" th:field="*{observacoes}" rows="3" placeholder="Ex: Ponto de encontro, malas, tolerância de atraso..."></textarea>
+                            </div>
+
+                            <!-- Botões de Ação -->
+                            <div class="col-12 d-flex gap-2 pt-2">
+                                <button type="submit" class="btn btn-primary flex-grow-1 py-2 fw-semibold d-inline-flex align-items-center justify-content-center gap-2 shadow-sm" 
+                                        th:text="${caronaFormDTO.id != null} ? 'Salvar Alterações' : 'Publicar Carona'">
+                                    Publicar Carona
+                                </button>
+
+                                <a href="/caronas" class="btn btn-outline-secondary px-3 py-2 fw-semibold d-inline-flex align-items-center justify-content-center gap-1">
+                                    <i class="bi bi-arrow-left fs-5"></i>
+                                    <span>Voltar</span>
+                                </a>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
             </div>
+
         </div>
     </div>
 </section>

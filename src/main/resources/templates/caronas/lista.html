@@ -3,75 +3,77 @@
 	xmlns:hx="http://www.w3.org/1999/xhtml"
 	th:replace="~{layout :: html(template=~{::section})}">
 <section>
-	<!--     Banner de Apresentação -->
-	<div
-		class="d-block d-md-none p-4 mb-4 bg-primary text-white rounded-3 shadow-sm text-center">
-		<div class="container-fluid d-grid gap-2 justify-content-center">
-			<a href="/caronas/novo"
-				class="btn btn-light btn-lg fw-bold text-primary w-100">Oferecer
-				uma Carona</a>
-		</div>
-	</div>
-
 
 	<!-- Formulário de Filtro por Data -->
-	<div class="card shadow-sm mb-4">
-		<!-- Cabeçalho do Card com Título, Botão de Limpar e Botão de Colapsar -->
+	<div class="card shadow-sm border border-secondary-subtle mb-3">
+		<!-- Cabeçalho do Card Clicável para Colapsar/Expandir (Mais compacto) -->
 		<div
-			class="card-header d-flex justify-content-between align-items-center bg-white py-3">
-			<h5 class="mb-0 fw-bold text-secondary">
-				<i class="bi bi-filter me-2"></i>
+			class="card-header d-flex justify-content-between align-items-center bg-white py-2 px-3 border-bottom border-light-subtle role-button"
+			style="cursor: pointer;" data-bs-toggle="collapse"
+			data-bs-target="#collapseFiltros" aria-expanded="false"
+			aria-controls="collapseFiltros">
+
+			<h5
+				class="mb-0 fw-semibold text-dark fs-6 user-select-none d-flex align-items-center gap-2">
+				<i class="bi bi-funnel text-dark"></i>
 				Filtros
 			</h5>
 
-			<!-- Grupo de botões à direita (Limpar e Colapsar) -->
 			<div class="d-flex align-items-center gap-2">
 				<!-- Botão de Limpar Filtros -->
 				<a href="/caronas/limpar"
-					class="btn btn-sm btn-outline-secondary d-flex align-items-center justify-content-center px-2 py-1"
-					title="Restaurar filtros padrões">
-					<i class="bi bi-arrow-counterclockwise"></i>
-					<span class="d-none d-sm-inline ms-1">Limpar</span>
+					class="btn btn-sm btn-outline-secondary d-flex align-items-center justify-content-center border-0 px-2 py-1 fs-6"
+					title="Restaurar filtros padrões"
+					onclick="event.stopPropagation();">
+					<i class="bi bi-arrow-counterclockwise fs-6"></i>
+					<span class="d-none d-sm-inline ms-1 small">Limpar</span>
 				</a>
 
-				<!-- Botão de Colapsar -->
-				<button class="btn btn-sm btn-outline-secondary" type="button"
-					data-bs-toggle="collapse" data-bs-target="#collapseFiltros"
-					aria-expanded="true" aria-controls="collapseFiltros"
-					title="Minimizar/Expandir filtros">
-					<i class="bi bi-chevron-up"></i>
+				<!-- Ícone do Collapse -->
+				<button
+					class="btn btn-sm btn-outline-secondary border-0 p-1 d-flex align-items-center justify-content-center"
+					type="button" title="Minimizar/Expandir filtros">
+					<i id="iconeCollapseFiltros" class="bi bi-chevron-down fs-6"></i>
 				</button>
 			</div>
 		</div>
 
-		<!-- Corpo do card envolvido pela div colapsável -->
-		<div class="collapse show" id="collapseFiltros">
-			<div class="card-body">
-				<form method="get" action="/caronas" class="row g-3 align-items-end"
+		<!-- Corpo do card colapsável (Colapsado por padrão: classe 'collapse' sem 'show') -->
+		<div class="collapse" id="collapseFiltros">
+			<div class="card-body p-3">
+				<form method="get" action="/caronas" class="row g-2 align-items-end"
 					hx-get="/caronas" hx-target="#lista-caronas-container"
 					hx-push-url="true" hx-trigger="change" hx-indicator="#indicator">
 
-					<div class="col-md-4">
-						<label for="filtroDataInicio" class="form-label fw-bold">Data
+					<!-- Data Inicial (Lado a lado no Mobile: col-6) -->
+					<div class="col-6 col-md-4">
+						<label for="filtroDataInicio"
+							class="form-label x-small fw-semibold text-secondary mb-1">Data
 							Inicial:</label> <input type="datetime-local" id="filtroDataInicio"
-							name="filtroDataInicio" class="form-control"
+							name="filtroDataInicio"
+							class="form-control form-control-sm border-light-subtle px-2"
 							th:value="${filtroDataInicio != null ? #temporals.format(filtroDataInicio, 'yyyy-MM-dd''T''HH:mm') : ''}" />
 					</div>
 
-					<div class="col-md-4">
-						<label for="filtroDataFim" class="form-label fw-bold">Data
+					<!-- Data Final (Lado a lado no Mobile: col-6) -->
+					<div class="col-6 col-md-4">
+						<label for="filtroDataFim"
+							class="form-label x-small fw-semibold text-secondary mb-1">Data
 							Final:</label> <input type="datetime-local" id="filtroDataFim"
-							name="filtroDataFim" class="form-control"
+							name="filtroDataFim"
+							class="form-control form-control-sm border-light-subtle px-2"
 							th:value="${filtroDataFim != null ? #temporals.format(filtroDataFim, 'yyyy-MM-dd''T''HH:mm') : ''}" />
 					</div>
 
-					<div class="col-md-4 d-flex align-items-center">
-						<div class="form-check form-switch mt-4">
-							<input class="form-check-input" type="checkbox"
+					<!-- Checkbox Switch (Aproveita a linha no mobile) -->
+					<div class="col-12 col-md-4 pt-1 pt-md-0">
+						<div
+							class="form-check form-switch m-0 d-flex align-items-center gap-2">
+							<input class="form-check-input mt-0" type="checkbox"
 								id="filtroMinhasCaronas" name="filtroMinhasCaronas" value="true"
 								th:checked="${filtroMinhasCaronas != null and filtroMinhasCaronas}">
-							<label class="form-check-label fw-bold" for="filtroMinhasCaronas">Apenas
-								Minhas Reservas</label>
+							<label class="form-check-label small fw-semibold text-secondary"
+								for="filtroMinhasCaronas"> Apenas Minhas Reservas </label>
 						</div>
 					</div>
 				</form>
@@ -79,116 +81,152 @@
 		</div>
 	</div>
 
-
-	<!-- Últimas Caronas Disponíveis -->
-	<h3 class="mb-3">Próximas caronas</h3>
+	<!-- Título e Botão de Adição -->
+	<div class="d-flex justify-content-between align-items-center mb-3">
+		<h5 class="mb-0 text-dark fw-bold fs-5">Próximas caronas</h5>
+		<a href="/caronas/novo"
+			class="btn btn-outline-success border-0 fs-3 lh-1 p-2 d-flex align-items-center justify-content-center"
+			title="Oferecer uma Carona" aria-label="Oferecer uma Carona">
+			<i class="bi bi-plus-circle-fill"></i>
+		</a>
+	</div>
 
 	<div id="indicator">
+		<!-- Indicador HTMX Centralizado -->
 		<img class="htmx-indicator mx-auto mb-3" width="100"
-			src="/imagens/bars.svg" alt="Loading..."
+			src="/imagens/bars.svg" alt="Carregando..."
 			style="filter: grayscale(100%); opacity: 0.5;" />
 
 		<div id="lista-caronas-container" class="htmx-load-hide">
-
 			<div class="row">
-				<!-- Cartão 1: Carona Disponível (Destacado) -->
+				<!-- Loop de Caronas -->
 				<div th:fragment="lista-caronas" th:each="c: ${caronas}"
 					class="col-md-4 mb-3">
 
-					<!-- Cartão Dinâmico: Altera a borda e o fundo dependendo do estado da carona -->
-					<div class="card h-100 shadow"
-						th:classappend="${c.cancelada} ? 'border-secondary border-2 bg-secondary bg-opacity-10 opacity-75' : 
-                        (${c.realizada} ? 'border-secondary border-2 bg-light opacity-75' : 
-                        (${c.esgotada} and !${c.estouNaCarona} ? 'border-danger border-2 bg-danger bg-opacity-10 opacity-75' : 
-                        (${c.estouNaCarona} ? 'border-success border-2 bg-success bg-opacity-10 ' : 'border-primary border-2')))">
+					<!-- Cartão com Fundo Cinza quando Cancelada, Realizada ou Esgotada/Lotada -->
+					<div
+						class="card h-100 shadow-sm border border-secondary-subtle card-carona-clicavel"
+						style="cursor: pointer;"
+						th:data-url="@{/caronas/{id}(id=${c.id})}"
+						th:classappend="${c.cancelada} or ${c.realizada} or (${c.esgotada} and !${c.estouNaCarona}) ? 'bg-secondary bg-opacity-10 opacity-75' : 
+                            (${c.estouNaCarona} ? 'bg-success bg-opacity-10' : 'bg-white')">
 
-						<div class="card-body d-flex flex-column">
+						<div class="card-body d-flex flex-column p-3">
 
-							<!-- Cabeçalho e Badge de Status -->
+							<!-- Cabeçalho e Ícone de Status -->
 							<div
-								class="d-flex justify-content-between align-items-start mb-2">
-								<h5 class="card-title fw-bold mb-0 text-muted"
-									th:classappend="${c.cancelada} ? 'text-secondary' : (${c.realizada} ? 'text-secondary' : (${c.esgotada} and !${c.estouNaCarona} ? 'text-danger' : (${c.estouNaCarona} ? 'text-success' : 'text-primary')))"
-									th:text="${c.direcao}">Natal ➔ Lajes</h5>
+								class="d-flex justify-content-between align-items-center mb-2">
+								<h6 class="card-title fw-bold mb-0"
+									th:classappend="${c.cancelada} or ${c.realizada} or (${c.esgotada} and !${c.estouNaCarona}) ? 'text-secondary' : (${c.estouNaCarona} ? 'text-success' : 'text-dark')"
+									th:text="${c.direcao}">Natal ➔ Lajes</h6>
 
-								<!-- Badge dinâmico -->
-								<span class="badge fs-6"
-									th:classappend="${c.cancelada} ? 'bg-secondary' : (${c.realizada} ? 'bg-secondary' : (${c.esgotada} and !${c.estouNaCarona} ? 'bg-danger' : (${c.estouNaCarona} ? 'bg-success' : 'bg-primary')))">
+								<span class="fs-4 d-flex align-items-center"
+									th:title="${c.cancelada} ? 'Cancelada' : (${c.realizada} ? 'Realizada' : (${c.esgotada} and !${c.estouNaCarona} ? 'Esgotada' : (${c.estouNaCarona} ? 'Confirmada' : 'Disponível')))"
+									th:classappend="${c.cancelada} or ${c.realizada} or (${c.esgotada} and !${c.estouNaCarona}) ? 'text-secondary' : (${c.estouNaCarona} ? 'text-success' : 'text-dark')">
 									<i class="bi"
-										th:classappend="${c.cancelada} ? 'bi-x-circle-fill' : (${c.realizada} ? 'bi-clock-history' : (${c.esgotada} and !${c.estouNaCarona} ? 'bi-slash-circle-fill' : (${c.estouNaCarona} ? 'bi-check-circle-fill' : 'bi-car-front')))"></i>
-									<span
-									th:text="${c.cancelada} ? 'CANCELADA' : (${c.realizada} ? 'REALIZADA' : (${c.esgotada} and !${c.estouNaCarona} ? 'ESGOTADA' : (${c.estouNaCarona} ? 'Confirmada' : 'DISPONÍVEL')))">DISPONÍVEL</span>
+										th:classappend="${c.cancelada} ? 'bi-x-circle-fill' : (${c.realizada} ? 'bi-clock-history' : (${c.esgotada} and !${c.estouNaCarona} ? 'bi-slash-circle-fill' : (${c.estouNaCarona} ? 'bi-check-circle-fill' : 'bi-car-front-fill')))"></i>
 								</span>
 							</div>
+							
+							<!-- Informações Centrais em Duas Colunas -->
+							<div class="row gx-2 mb-0 flex-grow-1">
+								
+								<!-- Coluna Esquerda: Data e Motorista -->
+								<div class="col-6 d-flex flex-column border-end border-light-subtlepe-2 ">
+									<!-- Data -->
+									<div class="small fw-medium text-secondary mb-2 lh-sm" th:text="${#temporals.format(c.data, 'EEE, dd/MM/yyyy HH:mm')}">
+										Seg, 15/06/2026 08:00
+									</div>
+									
+									<!-- Motorista -->
+									<div class="mt-auto">
+										<span class="text-muted d-block mb-1" style="font-size: 0.7rem;">Motorista</span>
+										<p class="card-text small text-dark-emphasis mb-0 d-flex align-items-center text-truncate">
+											<i class="bi bi-person-fill me-1 fs-6 text-secondary"></i>
+											<span class="fw-semibold text-truncate" th:text="${c.motorista}">João Silva</span>
+										</p>
+									</div>
+								</div>
 
-							<!-- Data e Motorista -->
-							<h6 class="card-subtitle mb-2 text-muted"
-								th:text="${#temporals.format(c.data, 'dd/MM/yyyy HH:mm (EEEE)')}">15/06/2026
-								08:00</h6>
-							<p class="card-text mb-1">
-								<strong>Motorista:</strong> <span th:text="${c.motorista}">João
-									Silva</span>
-							</p>
+								<!-- Coluna Direita: Passageiros -->
+								<div class="col-6 d-flex flex-column ps-3">
+									<!-- Contador -->
+									<div class="mb-2">
+										<span class="badge bg-light text-secondary border border-light-subtle small px-2 py-1 d-inline-flex align-items-center gap-1" title="Passageiros confirmados / Total de vagas">
+											<i class="bi bi-people-fill fs-6 text-secondary"></i>
+											<span><span class="fw-bold text-dark" th:text="${c.passageiros.size()}">2</span>/<span th:text="${c.vagas}">4</span></span>
+										</span>
+									</div>
 
-							<!-- Título dos Passageiros -->
-							<p class="card-text mb-1 fw-semibold text-muted">
-								<strong>Passageiros:</strong>
-							</p>
+									<!-- Lista Numérica (Primeiro Nome) -->
+									<div th:if="${#lists.isEmpty(c.passageiros)}" class="text-muted fst-italic" style="font-size: 0.75rem;">
+										Nenhum passageiro
+									</div>
+									<ol th:if="${!#lists.isEmpty(c.passageiros)}" class="mb-0 ps-3 text-secondary lh-sm" style="font-size: 0.8rem;">
+										<li th:each="p: ${c.passageiros}" class="text-truncate mb-1" th:title="${p.nome}" 
+											th:text="${#strings.contains(p.nome, ' ') ? #strings.substringBefore(p.nome, ' ') : p.nome}">
+											Maria
+										</li>
+									</ol>
+								</div>
 
-							<!-- Lista de Vagas / Passageiros -->
-							<ol class="small ps-3 mb-3 text-muted">
-								<li th:each="i : ${#numbers.sequence(0, c.vagas - 1)}"><span
-									th:text="${i < c.passageiros.size() ? c.passageiros[i].nome : ''}"></span>
-								</li>
-							</ol>
+							</div>
+	
 
-							<!-- Rodapé do Card: Valor e Botões de Ação Condicionais -->
+							<!-- Rodapé: Valor e Ações -->
 							<div
-								class="d-flex justify-content-between align-items-center mt-auto">
+								class="d-flex justify-content-between align-items-center mt-auto pt-2 border-light-subtle">
 
-								<!-- Preço (Fica tachado se passada, cancelada ou esgotada) -->
-								<span class="fs-5 fw-bold text-muted"
-									th:classappend="${c.cancelada} or ${c.realizada} or (${c.esgotada} and !${c.estouNaCarona}) ? 'text-decoration-line-through' : 'text-success'"
+								<!-- Preço -->
+								<span class="fw-bold fs-6 text-dark"
+									th:classappend="${c.cancelada} or ${c.realizada} or (${c.esgotada} and !${c.estouNaCarona}) ? 'text-muted text-decoration-line-through' : ''"
 									th:text="${#numbers.formatCurrency(c.valor)}">R$ 35,00</span>
 
-								<div class="d-flex gap-2">
-
-									<!-- Se a carona já foi realizada, esgotada ou cancelada -->
-									<a
-										th:if="${c.cancelada} or ${c.realizada} or (${c.esgotada} and !${c.estouNaCarona})"
-										href="#" class="btn btn-secondary btn-sm disabled fw-bold">
-										<span>Indisponível</span>
-									</a>
-
-									<!-- Ações para caronas no futuro -->
+								<!-- Ações Ativas -->
+								<div class="d-flex gap-1 stop-card-click">
 									<div
 										th:if="!${c.realizada} and ${c.data.isAfter(#temporals.createNow())}">
-										<!-- Se o usuário já estiver na carona -->
+										<!-- Sair -->
 										<form
 											th:if="${c.estouNaCarona} and !${c.cancelada} and !${c.souMotorista}"
-											th:action="@{/caronas/{id}/sair(id=${c.id})}" method="post">
-											<button type="submit" class="btn btn-outline-danger btn-sm">Sair
-												da Carona</button>
+											th:action="@{/caronas/{id}/sair(id=${c.id})}" method="post"
+											class="d-inline">
+											<button type="submit"
+												class="btn btn-sm btn-outline-danger border-0 p-2 d-inline-flex align-items-center justify-content-center"
+												title="Sair da Carona" aria-label="Sair da Carona">
+												<i class="bi bi-box-arrow-right fs-5"></i>
+											</button>
 										</form>
 
-										<!-- Se estiver disponível e o usuário NÃO estiver nela -->
+										<!-- Reservar -->
 										<form
 											th:if="!${c.estouNaCarona} and !${c.cancelada} and !${c.esgotada}"
 											th:action="@{/caronas/{id}/reservar(id=${c.id})}"
-											method="post">
-											<button type="submit" class="btn btn-outline-success btn-sm">Reservar</button>
+											method="post" class="d-inline">
+											<button type="submit"
+												class="btn btn-sm btn-outline-success border-0 p-2 d-inline-flex align-items-center justify-content-center"
+												title="Reservar Vaga" aria-label="Reservar Vaga">
+												<i class="bi bi-box-arrow-in-right fs-5"></i>
+											</button>
 										</form>
 
-										<!-- Se o usuário for o motorista -->
-										<a th:if="${c.souMotorista} and !${c.cancelada}"
-											th:href="@{/caronas/{id}/editar(id=${c.id})}"
-											class="btn btn-outline-primary btn-sm">Editar</a>
+										<!-- Editar -->
+										<!-- 										<a th:if="${c.souMotorista} and !${c.cancelada}" -->
+										<!-- 											th:href="@{/caronas/{id}/editar(id=${c.id})}" -->
+										<!-- 											class="btn btn-sm btn-outline-primary border-0 p-2 d-inline-flex align-items-center justify-content-center" -->
+										<!-- 											title="Editar Carona" aria-label="Editar Carona"> -->
+										<!-- 											<i class="bi bi-pencil-square fs-5"></i> -->
+										<!-- 										</a> -->
 									</div>
 
-									<!-- Botão de Detalhes (Sempre visível) -->
+									<!-- Detalhes -->
 									<a th:href="@{/caronas/{id}(id=${c.id})}"
-										class="btn btn-outline-primary btn-sm">Mais Detalhes</a>
+										class="btn btn-sm btn-outline-secondary border-0 p-2 d-inline-flex align-items-center justify-content-center"
+										title="Ver Detalhes" aria-label="Ver Detalhes">
+										<i class="bi bi-chevron-right fs-5"></i>
+									</a>
 								</div>
+
 							</div>
 
 						</div>
@@ -196,9 +234,41 @@
 
 				</div>
 			</div>
-
 		</div>
 	</div>
+
+	<!-- Script para Alternar o Ícone do Filtro -->
+	<script>
+		document.addEventListener("DOMContentLoaded", function() {
+			const collapseElement = document.getElementById('collapseFiltros');
+			const icone = document.getElementById('iconeCollapseFiltros');
+
+			if (collapseElement && icone) {
+				collapseElement.addEventListener('hide.bs.collapse',
+						function() {
+							icone.classList.remove('bi-chevron-up');
+							icone.classList.add('bi-chevron-down');
+						});
+
+				collapseElement.addEventListener('show.bs.collapse',
+						function() {
+							icone.classList.remove('bi-chevron-down');
+							icone.classList.add('bi-chevron-up');
+						});
+			}
+		});
+
+		document.addEventListener("click", function(event) {
+			const card = event.target.closest('.card-carona-clicavel');
+
+			if (card && !event.target.closest('.stop-card-click')) {
+				const url = card.getAttribute('data-url');
+				if (url) {
+					window.location.href = url;
+				}
+			}
+		});
+	</script>
 
 </section>
 </html>

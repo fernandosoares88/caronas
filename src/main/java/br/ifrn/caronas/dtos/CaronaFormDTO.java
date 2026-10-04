@@ -18,6 +18,7 @@ public class CaronaFormDTO {
 	private LocalDateTime data;
 	private Integer vagas;
 	private Double valor;
+	private String pix;
 	private String observacoes;
 	
 	public Carona extrair() {
@@ -27,6 +28,7 @@ public class CaronaFormDTO {
 				.data(this.data)
 				.vagas(this.vagas)
 				.valor(this.valor)
+				.pix(this.getPix())
 				.observacoes(this.observacoes)
 				.build();
 	}
@@ -38,6 +40,7 @@ public class CaronaFormDTO {
 				.data(carona.getData())
 				.vagas(carona.getVagas())
 				.valor(carona.getValor())
+				.pix(carona.getPix())
 				.observacoes(carona.getObservacoes())
 				.build();
 	}
