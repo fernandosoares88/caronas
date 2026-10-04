@@ -28,7 +28,7 @@
 
 <!-- Link para o Manifesto -->
 <link rel="manifest" th:href="@{/manifest.json}">
-<meta name="theme-color" content="#007bff">
+<meta name="theme-color" content="#0d6efd">
 
 <!-- Script para Registrar o Service Worker -->
 <script>
@@ -59,51 +59,63 @@
 </style>
 
 </head>
-<body class="bg-light">
+<body class="bg-light d-flex flex-column min-vh-100">
 
-	<!-- Navbar -->
+	<!-- Navbar Suave com Fundo Claro e Borda Sutil -->
 	<nav
-		class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm sticky-top">
+		class="navbar navbar-expand-lg bg-white border-bottom border-light-subtle shadow-sm sticky-top">
 		<div class="container">
-			<a class="navbar-brand fw-bold" href="/">
-				<i class="bi bi-car-front-fill"></i>
-				Caronas
+			<a
+				class="navbar-brand fw-bold text-dark d-flex align-items-center gap-2"
+				href="/">
+				<i class="bi bi-car-front-fill fs-4 text-dark"></i>
+				<span>Caronas</span>
 			</a>
-			<button class="navbar-toggler" type="button"
+			<button class="navbar-toggler border-0 p-2" type="button"
 				data-bs-toggle="collapse" data-bs-target="#navbarNav">
 				<span class="navbar-toggler-icon"></span>
 			</button>
 			<div class="collapse navbar-collapse" id="navbarNav">
 				<ul class="navbar-nav me-auto">
-					<li class="nav-item"><a class="nav-link" href="/caronas/novo">Oferecer
-							Carona</a></li>
+<!-- 					<li class="nav-item"><a -->
+<!-- 							class="nav-link text-secondary fw-medium small d-flex align-items-center gap-1 py-2" -->
+<!-- 							href="/caronas/novo"> -->
+<!-- 							<i class="bi bi-plus-circle fs-5"></i> -->
+<!-- 							<span>Oferecer Carona</span> -->
+<!-- 						</a></li> -->
 				</ul>
-				<ul class="navbar-nav">
+				<ul class="navbar-nav align-items-lg-center">
 					<li sec:authorize="!isAuthenticated()" class="nav-item"><a
-							class="btn btn-outline-light btn-sm ms-2" th:href="@{/login}">Entrar</a>
-					</li>
-					<li sec:authorize="isAuthenticated()" class="nav-item"><a
-							class="btn btn-outline-light btn-sm ms-2" th:href="@{/logout}">Sair</a>
+							class="btn btn-outline-primary btn-sm border-0 fw-semibold px-3 ms-lg-2 py-2"
+							th:href="@{/login}">Entrar</a></li>
+					<li sec:authorize="isAuthenticated()" class="nav-item">
+						<form th:action="@{/logout}" method="post" class="d-inline">
+							<button type="submit"
+								class="btn btn-outline-secondary btn-sm border-0 fw-semibold px-3 ms-lg-2 py-2">
+								Sair</button>
+						</form>
 					</li>
 				</ul>
 			</div>
 		</div>
 	</nav>
 
-	<!-- Mensagem do Sistema em formato de Alerta do Bootstrap -->
+	<!-- Mensagens do Sistema com Contraste Suave -->
 	<div class="container mt-3" th:if="${msg}">
-		<div class="alert alert-success alert-dismissible fade show shadow-sm"
+		<div
+			class="alert alert-success bg-success-subtle text-success-emphasis border border-success-subtle alert-dismissible fade show shadow-sm d-flex align-items-center"
 			role="alert">
-			<i class="bi bi-check-circle-fill me-2"></i>
+			<i class="bi bi-check-circle-fill fs-5 me-2"></i>
 			<span th:text="${msg}">Mensagem do sistema</span>
 			<button type="button" class="btn-close" data-bs-dismiss="alert"
 				aria-label="Close"></button>
 		</div>
 	</div>
 	<div class="container mt-3" th:if="${msg2}">
-		<div class="alert alert-success alert-dismissible fade show shadow-sm"
+		<div
+			class="alert alert-success bg-success-subtle text-success-emphasis border border-success-subtle alert-dismissible fade show shadow-sm d-flex align-items-center"
 			role="alert">
-			<i class="bi bi-check-circle-fill me-2"></i>
+			<i class="bi bi-check-circle-fill fs-5 me-2"></i>
 			<span th:text="${msg2}">Mensagem do sistema</span>
 			<button type="button" class="btn-close" data-bs-dismiss="alert"
 				aria-label="Close"></button>
@@ -111,15 +123,16 @@
 	</div>
 
 	<!-- Conteúdo Dinâmico -->
-	<main class="container my-4">
+	<main class="container my-4 flex-grow-1">
 		<div th:replace="${template}"></div>
 	</main>
 
-	<!-- Rodapé -->
-	<footer class="text-center text-muted py-4 mt-auto border-top bg-white">
+	<!-- Rodapé Suave -->
+	<footer
+		class="text-center text-secondary py-3 mt-auto border-top border-light-subtle bg-white">
 		<div class="container">
-			<p class="mb-0">&copy; 2026 Caronas. Todos os direitos
-				reservados.</p>
+			<p class="mb-0 small fw-medium">&copy; 2026 Caronas. Todos os
+				direitos reservados.</p>
 		</div>
 	</footer>
 
