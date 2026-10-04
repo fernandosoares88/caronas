@@ -58,6 +58,18 @@
                                     <input type="number" step="0.01" class="form-control border-light-subtle" th:field="*{valor}" required placeholder="0.00">
                                 </div>
                             </div>
+                            
+                            <!-- Chave PIX -->
+                            <div class="col-12">
+                                <label for="pix" class="form-label small fw-semibold text-secondary">Chave PIX (para pagamento)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-secondary border-light-subtle">
+                                        <i class="bi bi-qr-code fs-6"></i>
+                                    </span>
+                                    <input type="text" class="form-control border-light-subtle" th:field="*{pix}" 
+                                           placeholder="Ex: CPF, Telefone, E-mail ou Chave Aleatória">
+                                </div>
+                            </div>
 
                             <!-- Observações -->
                             <div class="col-12">

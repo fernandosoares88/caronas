@@ -90,6 +90,24 @@
 							</a>
 						</div>
 					</div>
+					
+					<!-- Chave PIX do Motorista -->
+					<div th:if="${carona.pix != null and !carona.pix.isBlank()}"
+						class="p-3 bg-light-subtle rounded border border-light-subtle mb-3">
+						<span class="form-label small fw-semibold text-secondary d-block mb-2">
+							<i class="bi bi-qr-code me-1"></i> Chave PIX (Pagamento)
+						</span>
+						<div class="d-flex justify-content-between align-items-center gap-2">
+							<code class="text-dark bg-light px-2 py-1 rounded border border-light-subtle fw-semibold text-break small flex-grow-1"
+								  id="chavePixTexto" th:text="${carona.pix}">chave-pix-aqui</code>
+							
+							<button type="button" class="btn btn-outline-primary btn-sm fw-semibold d-inline-flex align-items-center gap-1"
+									onclick="copiarChavePix(this)">
+								<i class="bi bi-clipboard"></i>
+								<span>Copiar</span>
+							</button>
+						</div>
+					</div>
 
 					<!-- Passageiros Confirmados -->
 					<div
@@ -219,5 +237,28 @@
 			</div>
 		</div>
 	</div>
+	
+	<script>
+	function copiarChavePix(btn) {
+		const chavePix = document.getElementById('chavePixTexto').innerText.trim();
+		
+		navigator.clipboard.writeText(chavePix).then(() => {
+			const icon = btn.querySelector('i');
+			const span = btn.querySelector('span');
+			
+			btn.classList.replace('btn-outline-primary', 'btn-success');
+			icon.classList.replace('bi-clipboard', 'bi-check-lg');
+			span.innerText = 'Copiado!';
+			
+			setTimeout(() => {
+				btn.classList.replace('btn-success', 'btn-outline-primary');
+				icon.classList.replace('bi-check-lg', 'bi-clipboard');
+				span.innerText = 'Copiar';
+			}, 2000);
+		}).catch(err => {
+			console.error('Erro ao copiar chave PIX: ', err);
+		});
+	}
+	</script>
 </section>
 </html>

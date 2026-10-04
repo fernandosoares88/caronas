@@ -33,6 +33,7 @@ public class Carona {
 	private LocalDateTime data;
 	private Integer vagas;
 	private Double valor;
+	private String pix;
 	private String observacoes;
 	private boolean cancelada;
 	
