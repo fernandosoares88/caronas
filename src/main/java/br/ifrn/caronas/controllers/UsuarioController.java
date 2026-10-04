@@ -37,7 +37,6 @@ public class UsuarioController {
 		}
 		
 		usuario.setSenha(new BCryptPasswordEncoder().encode(usuario.getSenha()));
-		System.out.println(usuario);
 		
 		ur.save(usuario);
 		attributes.addFlashAttribute("msg", "Usuário cadastrado com sucesso. Faça login para acessar a aplicação.");

@@ -127,30 +127,51 @@
 										th:classappend="${c.cancelada} ? 'bi-x-circle-fill' : (${c.realizada} ? 'bi-clock-history' : (${c.esgotada} and !${c.estouNaCarona} ? 'bi-slash-circle-fill' : (${c.estouNaCarona} ? 'bi-check-circle-fill' : 'bi-car-front-fill')))"></i>
 								</span>
 							</div>
+							
+							<!-- Informações Centrais em Duas Colunas -->
+							<div class="row gx-2 mb-0 flex-grow-1">
+								
+								<!-- Coluna Esquerda: Data e Motorista -->
+								<div class="col-6 d-flex flex-column border-end border-light-subtlepe-2 ">
+									<!-- Data -->
+									<div class="small fw-medium text-secondary mb-2 lh-sm" th:text="${#temporals.format(c.data, 'EEE, dd/MM/yyyy HH:mm')}">
+										Seg, 15/06/2026 08:00
+									</div>
+									
+									<!-- Motorista -->
+									<div class="mt-auto">
+										<span class="text-muted d-block mb-1" style="font-size: 0.7rem;">Motorista</span>
+										<p class="card-text small text-dark-emphasis mb-0 d-flex align-items-center text-truncate">
+											<i class="bi bi-person-fill me-1 fs-6 text-secondary"></i>
+											<span class="fw-semibold text-truncate" th:text="${c.motorista}">João Silva</span>
+										</p>
+									</div>
+								</div>
 
-							<!-- Data com Dia da Semana (Simplificado) -->
-							<p class="card-subtitle small fw-medium text-secondary mb-2"
-								th:text="${#temporals.format(c.data, 'EEE, dd/MM/yyyy HH:mm')}">Seg,
-								15/06/2026 08:00</p>
+								<!-- Coluna Direita: Passageiros -->
+								<div class="col-6 d-flex flex-column ps-3">
+									<!-- Contador -->
+									<div class="mb-2">
+										<span class="badge bg-light text-secondary border border-light-subtle small px-2 py-1 d-inline-flex align-items-center gap-1" title="Passageiros confirmados / Total de vagas">
+											<i class="bi bi-people-fill fs-6 text-secondary"></i>
+											<span><span class="fw-bold text-dark" th:text="${c.passageiros.size()}">2</span>/<span th:text="${c.vagas}">4</span></span>
+										</span>
+									</div>
 
-							<!-- Motorista e Total de Passageiros -->
-							<div
-								class="d-flex justify-content-between align-items-center mb-2">
-								<p
-									class="card-text small text-dark-emphasis mb-0 d-flex align-items-center">
-									<i class="bi bi-person me-1 fs-6 text-secondary"></i>
-									<span th:text="${c.motorista}">João Silva</span>
-								</p>
+									<!-- Lista Numérica (Primeiro Nome) -->
+									<div th:if="${#lists.isEmpty(c.passageiros)}" class="text-muted fst-italic" style="font-size: 0.75rem;">
+										Nenhum passageiro
+									</div>
+									<ol th:if="${!#lists.isEmpty(c.passageiros)}" class="mb-0 ps-3 text-secondary lh-sm" style="font-size: 0.8rem;">
+										<li th:each="p: ${c.passageiros}" class="text-truncate mb-1" th:title="${p.nome}" 
+											th:text="${#strings.contains(p.nome, ' ') ? #strings.substringBefore(p.nome, ' ') : p.nome}">
+											Maria
+										</li>
+									</ol>
+								</div>
 
-								<!-- Contador de Passageiros -->
-								<span
-									class="badge bg-light text-secondary border border-light-subtle small px-2 py-1 d-flex align-items-center gap-1"
-									title="Passageiros confirmados / Total de vagas"> <i
-										class="bi bi-people-fill fs-6 text-secondary"></i> <span><span
-										class="fw-bold text-dark" th:text="${c.passageiros.size()}">2</span>/<span
-										th:text="${c.vagas}">4</span></span>
-								</span>
 							</div>
+	
 
 							<!-- Rodapé: Valor e Ações -->
 							<div
