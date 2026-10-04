@@ -106,6 +106,7 @@ public class CaronasController {
 			carona.setDirecao(caronaFormDTO.getDirecao());
 			carona.setData(caronaFormDTO.getData());
 			carona.setValor(caronaFormDTO.getValor());
+			carona.setPix(caronaFormDTO.getPix());
 			carona.setObservacoes(caronaFormDTO.getObservacoes());
 
 			cr.save(carona);
