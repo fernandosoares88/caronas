@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -21,7 +22,7 @@ public class WebSecurityConfig {
 	private String rememberMeKey;
 
 	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) {
 		http.authorizeHttpRequests((requests) -> requests
 			.requestMatchers("/", "/manifest.json", "/sw.js", "/cadastro", "/css/**", "/js/**", "/imagens/**", "/webjars/**").permitAll()	            .anyRequest().authenticated())
 	        .formLogin((form) -> form
@@ -29,13 +30,13 @@ public class WebSecurityConfig {
 	            .defaultSuccessUrl("/caronas", true)
 	            .permitAll()
 	        )
-	        .logout((logout) -> logout.permitAll())
+	        .logout(LogoutConfigurer::permitAll)
 	        .rememberMe(remember -> remember
 	                .key(rememberMeKey) 
 	                .tokenValiditySeconds(86400 * 14) 
-	            );;
-	        
-	    return http.build();
+	            );
+
+        return http.build();
 	}
 	@Bean
 	public PasswordEncoder passwordEncoder() {
