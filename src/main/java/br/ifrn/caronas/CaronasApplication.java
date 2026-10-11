@@ -16,7 +16,7 @@ public class CaronasApplication {
         TimeZone.setDefault(TimeZone.getTimeZone("America/Fortaleza"));
     }
 
-	public static void main(String[] args) {
+	static void main(String[] args) {
 		SpringApplication.run(CaronasApplication.class, args);
 	}
 
