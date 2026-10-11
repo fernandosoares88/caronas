@@ -109,10 +109,6 @@ public class CaronaService {
         if (dbCarona.getData().isBefore(LocalDateTime.now()) || dbCarona.isCancelada() || !dbCarona.getMotorista().equals(usuario))
             throw new CaronaNaoEditavelException();
 
-        /* Validação: Só permite sair da carona se o usuário for um passageiro */
-        if (!dbCarona.getPassageiros().contains(usuario))
-            throw new UsuarioNaoEstaNaCaronaException();
-
         /* Cancela a carona */
         dbCarona.setCancelada(true);
         return caronaRepository.save(dbCarona);
