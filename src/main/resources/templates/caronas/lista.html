@@ -45,7 +45,7 @@
                       hx-target="#lista-caronas-container" hx-trigger="change" method="get">
 
                     <!-- Data Inicial (Lado a lado no Mobile: col-6) -->
-                    <div class="col-6 col-md-4">
+                    <div class="col-6 col-md-3">
                         <label class="form-label x-small fw-semibold text-secondary mb-1"
                                for="filtroDataInicio">
                             Data Inicial:
@@ -58,7 +58,7 @@
                     </div>
 
                     <!-- Data Final (Lado a lado no Mobile: col-6) -->
-                    <div class="col-6 col-md-4">
+                    <div class="col-6 col-md-3">
                         <label class="form-label x-small fw-semibold text-secondary mb-1"
                                for="filtroDataFim">
                             Data Final:
@@ -70,8 +70,22 @@
                                type="datetime-local"/>
                     </div>
 
+                    <div class="col-12 col-md-3">
+                        <label class="form-label x-small fw-semibold text-secondary mb-1"
+                               for="filtroMotorista">
+                            Motorista:
+                        </label>
+                        <select class="form-control form-control-sm border-light-subtle px-2"
+                                id="filtroMotorista"
+                                name="filtroMotorista">
+                            <option value="">Todos</option>
+                            <option th:each="m : ${motoristas}" th:value="${m.id}" th:text="${m.nome}">
+                                Nome do motorista
+                            </option>
+                        </select>
+                    </div>
                     <!-- Switches Agrupados -->
-                    <div class="col-12 col-md-4 pt-1 pt-md-0">
+                    <div class="col-12 col-md-3 pt-1 pt-md-0">
                         <!-- Checkbox Switch Minhas Caronas (Aproveita a linha no mobile) -->
                         <div class="form-check form-switch mt-2 d-flex align-items-center gap-2">
                             <input class="form-check-input" id="filtroMinhasCaronas"

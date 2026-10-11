@@ -2,6 +2,7 @@ package br.ifrn.caronas.controllers;
 
 import br.ifrn.caronas.dtos.CaronaFormDTO;
 import br.ifrn.caronas.dtos.CaronaItemListaDTO;
+import br.ifrn.caronas.dtos.UsuarioDTO;
 import br.ifrn.caronas.models.Carona;
 import br.ifrn.caronas.models.Usuario;
 import br.ifrn.caronas.services.CaronaService;
@@ -134,13 +135,12 @@ public class CaronasController {
     public String lista(@AuthenticationPrincipal Usuario usuarioLogado,
                         @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime filtroDataInicio,
                         @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime filtroDataFim,
+                        Long filtroMotorista,
                         Boolean filtroMinhasCaronas,
                         Boolean filtroMostrarCanceladas,
                         HttpServletRequest request,
                         HttpSession session,
                         Model model) {
-
-
         //Tenta recuperar valores da sessão
         if (filtroDataInicio == null)
             filtroDataInicio = (LocalDateTime) session.getAttribute("filtroDataInicio");
@@ -171,12 +171,19 @@ public class CaronasController {
 
         List<Carona> all = caronaService.search(filtroDataInicio, filtroDataFim,
                 Boolean.TRUE.equals(filtroMinhasCaronas) ? usuarioLogado : null,
-                null,
+                filtroMotorista != null && filtroMotorista > 0 ? Usuario.builder().id(filtroMotorista).build() : null,
                 Boolean.TRUE.equals(filtroMostrarCanceladas) ? null : false);
 
         List<CaronaItemListaDTO> caronas = CaronaItemListaDTO.converter(all, usuarioLogado);
+        List<UsuarioDTO> motoristas = UsuarioDTO.converter(
+                all.stream()
+                .map(Carona::getMotorista)
+                .distinct()
+                .toList()
+        );
 
         model.addAttribute("caronas", caronas);
+        model.addAttribute("motoristas", motoristas);
         model.addAttribute("filtroDataInicio", filtroDataInicio);
         model.addAttribute("filtroDataFim", filtroDataFim);
         model.addAttribute("filtroMinhasCaronas", filtroMinhasCaronas);
