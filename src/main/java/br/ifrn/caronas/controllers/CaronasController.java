@@ -23,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -177,9 +178,10 @@ public class CaronasController {
         List<CaronaItemListaDTO> caronas = CaronaItemListaDTO.converter(all, usuarioLogado);
         List<UsuarioDTO> motoristas = UsuarioDTO.converter(
                 all.stream()
-                .map(Carona::getMotorista)
-                .distinct()
-                .toList()
+                        .map(Carona::getMotorista)
+                        .distinct()
+                        .sorted(Comparator.comparing(Usuario::getNome))
+                        .toList()
         );
 
         model.addAttribute("caronas", caronas);

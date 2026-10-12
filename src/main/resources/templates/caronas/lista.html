@@ -75,21 +75,22 @@
                                for="filtroMotorista">
                             Motorista:
                         </label>
+
                         <select class="form-control form-control-sm border-light-subtle px-2"
-                                id="filtroMotorista"
-                                name="filtroMotorista">
+                                id="filtroMotorista" name="filtroMotorista">
                             <option value="">Todos</option>
-                            <option th:each="m : ${motoristas}" th:value="${m.id}" th:text="${m.nome}">
+                            <option th:each="m : ${motoristas}" th:text="${m.nome}" th:value="${m.id}">
                                 Nome do motorista
                             </option>
                         </select>
+
                     </div>
                     <!-- Switches Agrupados -->
                     <div class="col-12 col-md-3 pt-1 pt-md-0">
                         <!-- Checkbox Switch Minhas Caronas (Aproveita a linha no mobile) -->
                         <div class="form-check form-switch mt-2 d-flex align-items-center gap-2">
-                            <input class="form-check-input" id="filtroMinhasCaronas"
-                                   name="filtroMinhasCaronas"
+                            <input class="form-check-input"
+                                   id="filtroMinhasCaronas" name="filtroMinhasCaronas"
                                    th:checked="${filtroMinhasCaronas != null and filtroMinhasCaronas}" type="checkbox"
                                    value="true">
                             <label class="form-check-label small fw-semibold text-secondary"
@@ -315,6 +316,12 @@
                 }
             }
         });
+
+        // new TomSelect("#filtroMotorista", {
+        //     persist: false,
+        //     createOnBlur: false,
+        //     create: false
+        // });
     </script>
 
 </section>
