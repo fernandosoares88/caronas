@@ -1,74 +1,55 @@
 package br.ifrn.caronas.dtos;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
 import br.ifrn.caronas.models.Carona;
 import br.ifrn.caronas.models.Usuario;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Data
 @Builder
 public class CaronaItemListaDTO {
 
-	private Long id;
-	private String direcao;
-	private LocalDateTime data;
-	private Integer vagas;
-	private Double valor;
-	private String pix;
-	private String observacoes;
-	private String motorista;
-	private String motoristaTelefone;
-	private boolean cancelada;
-	private boolean estouNaCarona;
-	private boolean souMotorista;
-	private boolean esgotada;
-	private boolean realizada;
-	private List<UsuarioDTO> passageiros;
-	
-	public static List<CaronaItemListaDTO> converter(List<Carona> caronas, Usuario usuarioLogado) {
-		List<CaronaItemListaDTO> dtos = new ArrayList<CaronaItemListaDTO>();
+    private Long id;
+    private String direcao;
+    private LocalDateTime data;
+    private Integer vagas;
+    private Double valor;
+    private String pix;
+    private String observacoes;
+    private String motorista;
+    private String motoristaTelefone;
+    private boolean cancelada;
+    private boolean estouNaCarona;
+    private boolean souMotorista;
+    private boolean esgotada;
+    private boolean realizada;
+    private List<UsuarioDTO> passageiros;
 
-		for (Carona c : caronas) {
-			dtos.add(converter(c, usuarioLogado));
-		}
+    public static List<CaronaItemListaDTO> converter(List<Carona> caronas, Usuario usuarioLogado) {
+        return caronas.stream().map(c -> CaronaItemListaDTO.converter(c, usuarioLogado)).toList();
+    }
 
-		return dtos;
-	}
+    public static CaronaItemListaDTO converter(Carona carona, Usuario usuarioLogado) {
+        return CaronaItemListaDTO.builder()
+                .id(carona.getId())
+                .direcao(carona.getDirecao())
+                .data(carona.getData())
+                .vagas(carona.getVagas())
+                .valor(carona.getValor())
+                .pix(carona.getPix())
+                .observacoes(carona.getObservacoes())
+                .motorista(carona.getMotorista().getNome())
+                .motoristaTelefone(carona.getMotorista().getTelefone())
+                .cancelada(carona.isCancelada())
+                .estouNaCarona(carona.getMotorista().equals(usuarioLogado) || carona.getPassageiros().contains(usuarioLogado))
+                .souMotorista(carona.getMotorista().equals(usuarioLogado))
+                .esgotada(carona.getVagas() == carona.getPassageiros().size())
+                .realizada(carona.getData().isBefore(LocalDateTime.now()))
+                .passageiros(UsuarioDTO.converter(carona.getPassageiros()))
+                .build();
+    }
 
-	public static CaronaItemListaDTO converter(Carona carona, Usuario usuarioLogado) {
-		CaronaItemListaDTO dto = CaronaItemListaDTO.builder()
-									.id(carona.getId())
-									.direcao(carona.getDirecao())
-									.cancelada(carona.isCancelada())
-									.data(carona.getData())
-									.motorista(carona.getMotorista().getNome())
-									.motoristaTelefone(carona.getMotorista().getTelefone())
-									.observacoes(carona.getObservacoes())
-									.vagas(carona.getVagas())
-									.valor(carona.getValor())
-									.pix(carona.getPix())
-									.passageiros(UsuarioDTO.converter(carona.getPassageiros()))
-									.build();
-
-		if (carona.getMotorista().equals(usuarioLogado)) {
-			dto.setEstouNaCarona(true);
-			dto.setSouMotorista(true);
-		} else {
-			for (Usuario p : carona.getPassageiros()) {
-				if (p.equals(usuarioLogado)) {
-					dto.setEstouNaCarona(true);
-					break;
-				}
-			}
-		}
-
-		dto.setEsgotada(carona.getVagas() == carona.getPassageiros().size());
-		dto.setRealizada(carona.getData().isBefore(LocalDateTime.now()));
-		return dto;
-	}
-	
 }

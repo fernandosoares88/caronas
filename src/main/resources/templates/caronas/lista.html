@@ -152,8 +152,7 @@
                         <div class="card-body d-flex flex-column p-3">
 
                             <!-- Cabeçalho e Ícone de Status -->
-                            <div
-                                    class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
                                 <h6 class="card-title fw-bold mb-0"
                                     th:classappend="${c.cancelada} or ${c.realizada} or (${c.esgotada} and !${c.estouNaCarona}) ? 'text-secondary' : (${c.estouNaCarona} ? 'text-success' : 'text-dark')"
                                     th:text="${c.direcao}">Natal ➔ Lajes</h6>
@@ -161,7 +160,7 @@
                                 <span class="fs-4 d-flex align-items-center"
                                       th:classappend="${c.cancelada} or ${c.realizada} or (${c.esgotada} and !${c.estouNaCarona}) ? 'text-secondary' : (${c.estouNaCarona} ? 'text-success' : 'text-dark')"
                                       th:title="${c.cancelada} ? 'Cancelada' : (${c.realizada} ? 'Realizada' : (${c.esgotada} and !${c.estouNaCarona} ? 'Esgotada' : (${c.estouNaCarona} ? 'Confirmada' : 'Disponível')))">
-									<i class="bi"
+                                    <i class="bi"
                                        th:classappend="${c.cancelada} ? 'bi-x-circle-fill' : (${c.realizada} ? 'bi-clock-history' : (${c.esgotada} and !${c.estouNaCarona} ? 'bi-slash-circle-fill' : (${c.estouNaCarona} ? 'bi-check-circle-fill' : 'bi-car-front-fill')))"></i>
 								</span>
                             </div>
