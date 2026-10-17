@@ -1,6 +1,7 @@
 package br.ifrn.caronas.models;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.context.annotation.Lazy;
@@ -42,6 +43,6 @@ public class Carona {
 	
 	@ManyToMany
 	@Lazy(value = false)
-	private List<Usuario> passageiros;
+	private List<Usuario> passageiros = new ArrayList<>();
 
 }

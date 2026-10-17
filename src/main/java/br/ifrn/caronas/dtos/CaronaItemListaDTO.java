@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,10 +28,10 @@ public class CaronaItemListaDTO {
     private boolean souMotorista;
     private boolean esgotada;
     private boolean realizada;
-    private List<UsuarioDTO> passageiros;
+    private List<UsuarioDTO> passageiros = new ArrayList<>();
 
     public static List<CaronaItemListaDTO> converter(List<Carona> caronas, Usuario usuarioLogado) {
-        return caronas != null ? caronas.stream().map(c -> CaronaItemListaDTO.converter(c, usuarioLogado)).collect(Collectors.toList()) : null;
+        return caronas.stream().map(c -> CaronaItemListaDTO.converter(c, usuarioLogado)).collect(Collectors.toList());
     }
 
     public static CaronaItemListaDTO converter(Carona carona, Usuario usuarioLogado) {

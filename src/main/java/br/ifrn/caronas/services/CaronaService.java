@@ -5,8 +5,10 @@ import br.ifrn.caronas.models.Carona;
 import br.ifrn.caronas.models.Usuario;
 import br.ifrn.caronas.repositories.CaronaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,30 +20,33 @@ public class CaronaService {
         this.caronaRepository = caronaRepository;
     }
 
+    @Transactional
     public Carona adicionar(Carona carona) {
-        if (carona.getId() != null) {
+        if (carona.getId() != null)
             throw new IllegalArgumentException("Não é possível adicionar uma carona que já possui ID.");
-        }
-        if(carona.getPassageiros() != null)
-            carona.getPassageiros().remove(carona.getMotorista());
-        if (carona.getPassageiros() != null && carona.getPassageiros().size() > carona.getVagas())
-            throw new CaronaNaoEditavelException("Não foi possível adicionar a carona pois a quantidade de vagas é menor que a quantidade de passageiros.");
+
+        if(carona.getData().isBefore(LocalDateTime.now()))
+            throw new CaronaException("Não é possível adicionar uma carona com data anterior.");
+
+        validarPassageirosEVagas(carona);
+
         return caronaRepository.save(carona);
     }
 
+    @Transactional
     public Carona editar(Carona carona, Usuario usuarioLogado) {
 
         Carona dbCarona = caronaRepository.findById(carona.getId()).orElseThrow(CaronaNaoEncontradaException::new);
 
         if (!dbCarona.getMotorista().equals(usuarioLogado) || dbCarona.isCancelada()
-                || !dbCarona.getData().isAfter(LocalDateTime.now())) {
+                || dbCarona.getData().isBefore(LocalDateTime.now())) {
             throw new CaronaNaoEditavelException();
         }
 
-        if(carona.getPassageiros() != null)
-            carona.getPassageiros().remove(usuarioLogado);
-        if (carona.getPassageiros() != null && carona.getPassageiros().size() > carona.getVagas())
-            throw new CaronaNaoEditavelException("Não foi possível editar a carona pois a quantidade de vagas é menor que a quantidade de passageiros.");
+        if(carona.getData().isBefore(LocalDateTime.now()))
+            throw new CaronaException("Não é possível modificar uma carona para uma data anterior.");
+
+        validarPassageirosEVagas(carona);
 
         dbCarona.setDirecao(carona.getDirecao());
         dbCarona.setData(carona.getData());
@@ -68,6 +73,7 @@ public class CaronaService {
         return caronaRepository.findFirstByMotoristaOrderByIdDesc(usuario).orElse(null);
     }
 
+    @Transactional
     public Carona reservarCarona(Carona carona, Usuario usuario) {
         Carona dbCarona = findById(carona.getId());
 
@@ -89,6 +95,7 @@ public class CaronaService {
         return caronaRepository.save(dbCarona);
     }
 
+    @Transactional
     public Carona sairDaCarona(Carona carona, Usuario usuario) {
         Carona dbCarona = findById(carona.getId());
 
@@ -107,6 +114,7 @@ public class CaronaService {
         return caronaRepository.save(dbCarona);
     }
 
+    @Transactional
     public Carona cancelarCarona(Carona carona, Usuario usuario) {
         Carona dbCarona = findById(carona.getId());
 
@@ -119,5 +127,22 @@ public class CaronaService {
         /* Cancela a carona */
         dbCarona.setCancelada(true);
         return caronaRepository.save(dbCarona);
+    }
+
+    /**
+     * Método auxiliar privado para centralizar as regras de validação de passageiros e vagas.
+     */
+    private void validarPassageirosEVagas(Carona carona) {
+        // Garante que o motorista nunca esteja na lista de passageiros
+        if(carona.getPassageiros() == null){
+            carona.setPassageiros(new ArrayList<>());
+            return;
+        }
+        carona.getPassageiros().remove(carona.getMotorista());
+
+        // Valida se o número de passageiros excede o limite de vagas
+        if (carona.getPassageiros().size() > carona.getVagas()) {
+            throw new CaronaNaoEditavelException("Não foi possível processar a carona pois a quantidade de vagas é menor que a quantidade de passageiros.");
+        }
     }
 }
