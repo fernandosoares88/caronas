@@ -7,6 +7,7 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @Builder
@@ -29,7 +30,7 @@ public class CaronaItemListaDTO {
     private List<UsuarioDTO> passageiros;
 
     public static List<CaronaItemListaDTO> converter(List<Carona> caronas, Usuario usuarioLogado) {
-        return caronas.stream().map(c -> CaronaItemListaDTO.converter(c, usuarioLogado)).toList();
+        return caronas != null ? caronas.stream().map(c -> CaronaItemListaDTO.converter(c, usuarioLogado)).collect(Collectors.toList()) : null;
     }
 
     public static CaronaItemListaDTO converter(Carona carona, Usuario usuarioLogado) {
