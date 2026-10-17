@@ -22,6 +22,8 @@ public class CaronaService {
         if (carona.getId() != null) {
             throw new IllegalArgumentException("Não é possível adicionar uma carona que já possui ID.");
         }
+        if(carona.getPassageiros() != null)
+            carona.getPassageiros().remove(carona.getMotorista());
         return caronaRepository.save(carona);
     }
 
@@ -34,13 +36,16 @@ public class CaronaService {
             throw new CaronaNaoEditavelException();
         }
 
-        if (carona.getVagas() > dbCarona.getPassageiros().size()) {
-            dbCarona.setVagas(carona.getVagas());
-        }
+        if(carona.getPassageiros() != null)
+            carona.getPassageiros().remove(usuarioLogado);
+        if (carona.getPassageiros() != null && carona.getPassageiros().size() > carona.getVagas())
+            throw new CaronaNaoEditavelException("Não foi possível editar a carona pois a quantidade de vagas é menor que a quantidade de passageiros.");
 
         dbCarona.setDirecao(carona.getDirecao());
         dbCarona.setData(carona.getData());
+        dbCarona.setVagas(carona.getVagas());
         dbCarona.setValor(carona.getValor());
+        dbCarona.setPassageiros(carona.getPassageiros());
         dbCarona.setPix(carona.getPix());
         dbCarona.setObservacoes(carona.getObservacoes());
 

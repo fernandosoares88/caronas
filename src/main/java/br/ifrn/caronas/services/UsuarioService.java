@@ -6,6 +6,8 @@ import br.ifrn.caronas.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UsuarioService {
 
@@ -22,5 +24,7 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
-
+    public List<Usuario> findAllByNome(String nome) {
+        return usuarioRepository.findAllByNomeContainsIgnoreCase(nome);
+    }
 }

@@ -23,8 +23,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/caronas")
@@ -58,6 +61,8 @@ public class CaronasController {
         if (result.hasErrors()) {
             return form(caronaFormDTO, usuarioLogado);
         }
+
+        System.out.println(caronaFormDTO);
 
         // Nova carona
         if (caronaFormDTO.getId() == null || caronaFormDTO.getId() == 0) {
@@ -177,9 +182,10 @@ public class CaronasController {
         List<CaronaItemListaDTO> caronas = CaronaItemListaDTO.converter(all, usuarioLogado);
         List<UsuarioDTO> motoristas = UsuarioDTO.converter(
                 all.stream()
-                .map(Carona::getMotorista)
-                .distinct()
-                .toList()
+                        .map(Carona::getMotorista)
+                        .distinct()
+                        .sorted(Comparator.comparing(Usuario::getNome))
+                        .collect(Collectors.toList())
         );
 
         model.addAttribute("caronas", caronas);
