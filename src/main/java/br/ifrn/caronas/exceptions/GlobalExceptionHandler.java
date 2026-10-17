@@ -15,10 +15,16 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UsuarioTelefoneJaCadastradoException.class)
-    public String hadleUsuarioTelefoneJaCadastradoException(UsuarioTelefoneJaCadastradoException ex,
+    public String handleUsuarioTelefoneJaCadastradoException(UsuarioTelefoneJaCadastradoException ex,
                                                             RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("danger", ex.getMessage());
         return "redirect:/cadastro";
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public String handleException(RuntimeException ex, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("danger", ex.getMessage());
+        return "redirect:/caronas";
     }
 
 }

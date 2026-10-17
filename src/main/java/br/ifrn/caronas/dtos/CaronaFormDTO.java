@@ -1,6 +1,7 @@
 package br.ifrn.caronas.dtos;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,10 +23,8 @@ public class CaronaFormDTO {
 	private Double valor;
 	private String pix;
 	private String observacoes;
-	private List<UsuarioDTO> passageiros;
-
-	// Campo para receber os IDs selecionados do TomSelect/Formulário
-	private List<Long> passageirosIds;
+	private List<UsuarioDTO> passageiros = new ArrayList<>();
+	private List<Long> passageirosIds = new ArrayList<>();
 
 	public Carona extrair() {
 		List<Usuario> listaPassageiros = null;

@@ -1,5 +1,6 @@
 package br.ifrn.caronas.models;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class Usuario implements UserDetails {
 	private String senha;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
-	private List<Papel> papeis;
+	private List<Papel> papeis = new ArrayList<>();
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
