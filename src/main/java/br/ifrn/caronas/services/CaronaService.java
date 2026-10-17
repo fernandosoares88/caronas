@@ -24,6 +24,8 @@ public class CaronaService {
         }
         if(carona.getPassageiros() != null)
             carona.getPassageiros().remove(carona.getMotorista());
+        if (carona.getPassageiros() != null && carona.getPassageiros().size() > carona.getVagas())
+            throw new CaronaNaoEditavelException("Não foi possível adicionar a carona pois a quantidade de vagas é menor que a quantidade de passageiros.");
         return caronaRepository.save(carona);
     }
 
