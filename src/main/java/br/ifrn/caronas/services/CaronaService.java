@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -133,6 +134,10 @@ public class CaronaService {
      */
     private void validarPassageirosEVagas(Carona carona) {
         // Garante que o motorista nunca esteja na lista de passageiros
+        if(carona.getPassageiros() == null){
+            carona.setPassageiros(new ArrayList<>());
+            return;
+        }
         carona.getPassageiros().remove(carona.getMotorista());
 
         // Valida se o número de passageiros excede o limite de vagas

@@ -24,7 +24,7 @@ public class UsuarioDTO {
     }
 
     public static List<UsuarioDTO> converter(List<Usuario> usuarios) {
-        return usuarios.stream().map(UsuarioDTO::converter).collect(Collectors.toList());
+        return usuarios != null ? usuarios.stream().map(UsuarioDTO::converter).collect(Collectors.toList()): null;
     }
 
     public static Usuario extrair(UsuarioDTO usuarioDTO) {
@@ -36,7 +36,7 @@ public class UsuarioDTO {
     }
 
     public static List<Usuario> extrair(List<UsuarioDTO> usuarioDTOs) {
-        return usuarioDTOs.stream().map(UsuarioDTO::extrair).collect(Collectors.toList());
+        return usuarioDTOs != null ? usuarioDTOs.stream().map(UsuarioDTO::extrair).collect(Collectors.toList()) : null;
     }
 }
 
