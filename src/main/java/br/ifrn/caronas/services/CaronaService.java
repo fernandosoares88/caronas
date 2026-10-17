@@ -22,10 +22,14 @@ public class CaronaService {
         if (carona.getId() != null) {
             throw new IllegalArgumentException("Não é possível adicionar uma carona que já possui ID.");
         }
+        if(carona.getData().isBefore(LocalDateTime.now()))
+            throw new CaronaException("Não é possível adicionar uma carona com data anterior.");
+
         if(carona.getPassageiros() != null)
             carona.getPassageiros().remove(carona.getMotorista());
         if (carona.getPassageiros() != null && carona.getPassageiros().size() > carona.getVagas())
             throw new CaronaNaoEditavelException("Não foi possível adicionar a carona pois a quantidade de vagas é menor que a quantidade de passageiros.");
+
         return caronaRepository.save(carona);
     }
 
