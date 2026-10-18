@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: html(template=~{::section})}">
+<section>
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm border border-secondary-subtle">
+                <div class="card-body p-4">
+                    <h4 class="mb-4 text-center fw-bold text-dark">Meu Perfil</h4>
+
+                    <form th:action="@{/perfil}" method="post" th:object="${perfilFormDTO}">
+
+                        <!-- Telefone (Apenas leitura) -->
+                        <div class="mb-3">
+                            <label for="telefone" class="form-label small fw-semibold text-secondary">Telefone (Login)</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-secondary border-light-subtle">
+                                    <i class="bi bi-telephone-fill fs-6"></i>
+                                </span>
+                                <input type="text" id="telefone" class="form-control bg-light border-light-subtle" th:field="*{telefone}" readonly>
+                            </div>
+                        </div>
+
+                        <!-- Nome -->
+                        <div class="mb-3">
+                            <label for="nome" class="form-label small fw-semibold text-secondary">Nome Completo</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-secondary border-light-subtle">
+                                    <i class="bi bi-person-fill fs-6"></i>
+                                </span>
+                                <input type="text" id="nome" class="form-control border-light-subtle" th:field="*{nome}" required>
+                            </div>
+                        </div>
+
+                        <hr class="my-4 border-secondary-subtle">
+                        <h6 class="fw-bold text-secondary mb-3">Alterar Senha (Opcional)</h6>
+
+                        <!-- Senha Atual -->
+                        <div class="mb-3">
+                            <label for="senhaAtual" class="form-label small fw-semibold text-secondary">Senha Atual</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-secondary border-light-subtle">
+                                    <i class="bi bi-lock-fill fs-6"></i>
+                                </span>
+                                <input type="password" id="senhaAtual" class="form-control border-light-subtle" th:field="*{senhaAtual}" placeholder="Informe sua senha atual para alterar">
+                            </div>
+                        </div>
+
+                        <!-- Nova Senha -->
+                        <div class="mb-3">
+                            <label for="novaSenha" class="form-label small fw-semibold text-secondary">Nova Senha</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-secondary border-light-subtle">
+                                    <i class="bi bi-key-fill fs-6"></i>
+                                </span>
+                                <input type="password" id="novaSenha" class="form-control border-light-subtle" th:field="*{novaSenha}" placeholder="Nova senha">
+                            </div>
+                        </div>
+
+                        <!-- Confirmar Nova Senha -->
+                        <div class="mb-3">
+                            <label for="confirmarNovaSenha" class="form-label small fw-semibold text-secondary">Confirmar Nova Senha</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-secondary border-light-subtle">
+                                    <i class="bi bi-check2-circle fs-6"></i>
+                                </span>
+                                <input type="password" id="confirmarNovaSenha" class="form-control border-light-subtle" th:field="*{confirmarNovaSenha}" placeholder="Repita a nova senha">
+                            </div>
+                        </div>
+
+                        <!-- Botões de Ação -->
+                        <div class="col-12 d-flex gap-2 pt-3">
+                            <a class="btn btn-outline-secondary px-3 py-2 fw-semibold d-inline-flex align-items-center justify-content-center gap-1"
+                               th:href="@{/caronas}">
+                                <i class="bi bi-arrow-left fs-5"></i>
+                                <span>Voltar</span>
+                            </a>
+                            <button class="btn btn-primary flex-grow-1 py-2 fw-semibold d-inline-flex align-items-center justify-content-center gap-2 shadow-sm"
+                                    type="submit">
+                                <i class="bi bi-check-lg fs-5"></i>
+                                <span>Salvar Alterações</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</html>
