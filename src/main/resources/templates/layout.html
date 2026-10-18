@@ -91,23 +91,41 @@
                 </li>
 
                 <!-- Usuário Autenticado -->
-                <li class="nav-item d-flex align-items-center me-lg-2"
+                <li class="nav-item d-flex align-items-center me-lg-1"
                     sec:authorize="isAuthenticated()">
-                    <span class="navbar-text small text-secondary fw-semibold">
-                        <span>Olá,</span>
-                        <span class="text-dark fw-bold"
-                              th:text="${#strings.arraySplit(#authentication.principal.nome, ' ')[0]}">Fernando</span>
-					</span>
+    <span class="navbar-text small text-secondary fw-semibold">
+        <span>Olá,</span>
+        <span class="text-dark fw-bold"
+              th:text="${#strings.arraySplit(#authentication.principal.nome, ' ')[0]}">Fernando</span>
+    </span>
+                </li>
+
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a class="btn btn-outline-secondary btn-sm border-0 fw-semibold px-3 ms-lg-1 py-2 d-inline-flex align-items-center gap-1"
+                       th:href="@{/perfil}">
+<!--                        <i class="bi bi-person-circle"></i>-->
+                        <span>Meu Perfil</span>
+                    </a>
+                </li>
+
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                    <a class="btn btn-outline-secondary btn-sm border-0 fw-semibold px-3 ms-lg-1 py-2 d-inline-flex align-items-center gap-1"
+                       th:href="@{/admin/usuarios}">
+<!--                        <i class="bi bi-people-fill"></i>-->
+                        <span>Usuários</span>
+                    </a>
                 </li>
 
                 <li class="nav-item" sec:authorize="isAuthenticated()">
                     <form class="d-inline" method="post" th:action="@{/logout}">
-                        <button class="btn btn-outline-secondary btn-sm border-0 fw-semibold px-3 ms-lg-2 py-2"
+                        <button class="btn btn-outline-secondary btn-sm border-0 fw-semibold px-3 ms-lg-1 py-2 d-inline-flex align-items-center gap-1"
                                 type="submit">
-                            Sair
+<!--                            <i class="bi bi-box-arrow-right"></i>-->
+                            <span>Sair</span>
                         </button>
                     </form>
                 </li>
+
             </ul>
         </div>
     </div>
