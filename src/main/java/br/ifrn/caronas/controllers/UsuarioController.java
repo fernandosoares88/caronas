@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -65,6 +66,25 @@ public class UsuarioController {
 		}
 
 		return "redirect:/perfil";
+	}
+
+	@GetMapping("/admin/usuarios")
+	@PreAuthorize("hasRole('ADMIN')")
+	public String listarUsuarios(Model model) {
+		model.addAttribute("usuarios", usuarioService.listarTodos());
+		return "admin/usuarios";
+	}
+
+	@PostMapping("/admin/usuarios/{id}/resetar-senha")
+	@PreAuthorize("hasRole('ADMIN')")
+	public String resetarSenha(@PathVariable Long id, RedirectAttributes attributes) {
+		try {
+			usuarioService.resetarSenha(id);
+			attributes.addFlashAttribute("success", "Senha do usuário resetada com sucesso para '123456'.");
+		} catch (Exception e) {
+			attributes.addFlashAttribute("danger", "Erro ao resetar senha: " + e.getMessage());
+		}
+		return "redirect:/admin/usuarios";
 	}
 
 
