@@ -17,6 +17,9 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public Usuario adicionar(Usuario usuario) {
         if (usuario.getId() != null) {
             throw new IllegalArgumentException("Não é possível adicionar um usuário que já possui ID.");
@@ -26,9 +29,6 @@ public class UsuarioService {
         }
         return usuarioRepository.save(usuario);
     }
-
-    @Autowired
-    private PasswordEncoder passwordEncoder; // Injete o PasswordEncoder configurado no Spring Security
 
     @Transactional
     public void atualizarPerfil(Usuario usuarioLogado, PerfilFormDTO dto) {
@@ -52,7 +52,19 @@ public class UsuarioService {
         usuarioRepository.save(usuario);
     }
 
+    @Transactional
+    public void resetarSenha(Long usuarioId) {
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
 
+        // Redefine a senha para o valor padrão 123456
+        usuario.setSenha(passwordEncoder.encode("123456"));
+        usuarioRepository.save(usuario);
+    }
+
+    public List<Usuario> listarTodos() {
+        return usuarioRepository.findAllByOrderByNomeAsc();
+    }
     public List<Usuario> findAllByNome(String nome) {
         return usuarioRepository.findAllByNomeContainsIgnoreCase(nome);
     }
