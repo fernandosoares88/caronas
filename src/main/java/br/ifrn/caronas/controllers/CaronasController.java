@@ -62,8 +62,6 @@ public class CaronasController {
             return form(caronaFormDTO, usuarioLogado);
         }
 
-        System.out.println(caronaFormDTO);
-
         // Nova carona
         if (caronaFormDTO.getId() == null || caronaFormDTO.getId() == 0) {
             Carona carona = caronaFormDTO.extrair();
