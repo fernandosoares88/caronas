@@ -103,25 +103,42 @@ public class CaronasController {
 
     @PostMapping("/{id}/reservar")
     public String reservar(@PathVariable Long id, RedirectAttributes attributes,
-                           @AuthenticationPrincipal Usuario usuarioLogado) {
+                           @AuthenticationPrincipal Usuario usuarioLogado,
+                           HttpServletRequest request) {
         caronaService.reservarCarona(Carona.builder().id(id).build(), usuarioLogado);
         attributes.addFlashAttribute("success", "Reserva realizada com sucesso");
+
+        String referer = request.getHeader("Referer");
+        if (referer != null && !referer.isBlank()) {
+            return "redirect:" + referer;
+        }
         return "redirect:/caronas";
     }
 
     @PostMapping("/{id}/sair")
     public String sair(@PathVariable Long id, RedirectAttributes attributes,
-                       @AuthenticationPrincipal Usuario usuarioLogado) {
+                       @AuthenticationPrincipal Usuario usuarioLogado,
+                       HttpServletRequest request) {
         caronaService.sairDaCarona(Carona.builder().id(id).build(), usuarioLogado);
         attributes.addFlashAttribute("success", "Usuário removido da carona.");
+        String referer = request.getHeader("Referer");
+        if (referer != null && !referer.isBlank()) {
+            return "redirect:" + referer;
+        }
         return "redirect:/caronas";
     }
 
     @PostMapping("/{id}/cancelar")
     public String cancelarCarona(@PathVariable Long id, RedirectAttributes attributes,
-                                 @AuthenticationPrincipal Usuario usuarioLogado) {
+                                 @AuthenticationPrincipal Usuario usuarioLogado,
+                                 HttpServletRequest request) {
         caronaService.cancelarCarona(Carona.builder().id(id).build(), usuarioLogado);
         attributes.addFlashAttribute("success", "A carona foi cancelada.");
+
+        String referer = request.getHeader("Referer");
+        if (referer != null && !referer.isBlank()) {
+            return "redirect:" + referer;
+        }
         return "redirect:/caronas/{id}";
 
     }
